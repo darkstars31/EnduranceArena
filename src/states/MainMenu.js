@@ -6,6 +6,7 @@ export default class extends Phaser.State {
   preload () {}
 
   create () {
+
     const bannerText = 'Endurance Arena'
     let banner = this.add.text(this.world.centerX, this.game.height / 6, bannerText, {font: 'Bangers', fontSize: 40, fill: '#77BFA3', smoothed: false})
     banner.padding.set(10, 16)
@@ -22,7 +23,7 @@ export default class extends Phaser.State {
         item.anchor.setTo(0.5)  
         item.inputEnabled = menuItem.inputEnabled;
         item.useHandCursor = true;
-        this.addInputs(item);
+        this.addInputs(menuItem);
         menuSpacing += 32;
     });
 
@@ -39,8 +40,9 @@ export default class extends Phaser.State {
   }
 
   onMenuItemClick(item) {
+    this.add.audio('audioMenuSelect').play();
     console.log(item);
-    switch(item){
+    switch(item.label){
         case 'New Game':
             this.state.start('Game'); 
             break;
