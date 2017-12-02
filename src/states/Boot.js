@@ -11,7 +11,7 @@ export default class extends Phaser.State {
   preload () {
     WebFont.load({
       google: {
-        families: ['Bangers']
+        families: ['Bangers', 'Source Code Pro', 'Russo One', 'Patua One']
       },
       active: this.fontsLoaded
     })
@@ -23,6 +23,9 @@ export default class extends Phaser.State {
     this.load.image('loaderBar', './assets/images/loader-bar.png')
     this.load.image('attackButton', './assets/images/attackButton.png')
     this.load.image('shieldButton', './assets/images/shieldButton.png')
+
+    this.load.image('battleBackground1', './assets/images/battle-background1.png')
+    this.load.image('cloud1', './assets/images/cloud.png')
     
     this.load.audio('audioMenuSelect','./assets/audio/MENU_Select.ogg')
     

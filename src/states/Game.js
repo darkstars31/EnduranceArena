@@ -2,79 +2,89 @@
 import Phaser from 'phaser'
 import Mushroom from '../sprites/Mushroom'
 import Player from '../classes/player';
+import Monster from '../classes/monster'
 
 export default class extends Phaser.State {
   init () {}
   preload () {}
 
   create () {
+    this.add.sprite(0,0, 'battleBackground1');
 
+    let numClouds = this.rnd.integerInRange(1, 7) ;
+    this.clouds = [];
+    for(let i = 0;i < numClouds; i++){
+      let cloud = this.add.sprite(-200,this.rnd.integerInRange(20,60), 'cloud1');
+      cloud.scale.setTo(.5,.5);
+      this.clouds.push(cloud);
+    }
+
+
+    this.cloud = this.add.sprite(-200,20, 'cloud1');
+    this.cloud.scale.setTo(.5,.5);
+
+    this.mob = new Monster();
+    this.mob.hp = this.mob.hpMax;
+    
     this.player = new Player();
-    var hpBar = this.add.bitmapData(300,20);
-    hpBar.ctx.beginPath();
-    hpBar.ctx.rect(0,0,300,40);
-    hpBar.ctx.fillStyle = '#00685e';
-    hpBar.ctx.fill();
-
-    var bglife = this.add.sprite(this.world.centerX,this.world.centerY, hpBar);
-    bglife.anchor.set(0.5);
-
-    this.widthLife = new Phaser.Rectangle(0, 0, hpBar.width, hpBar.height);
-    this.totalLife = hpBar.width;
+    this.player.hp = this.player.hpMax;
     
-    this.life = this.add.sprite(this.game.world.centerX - bglife.width/2 + 10, this.game.world.centerY, hpBar);
-    this.life.anchor.y = 0.5;
-    this.life.cropEnabled = true;
-    this.life.crop(this.widthLife);
-    this.time.events.loop(1500, this.cropLife, this);
-
-    
-    var uiButtonsItems = [
+    this.uiButtonsItems = [
       { button: 'attackButton', scale: {x: .75, y: .75}, method: this.onAttackClick },
       { button: 'shieldButton', scale: {x: .6, y: .55}, method: this.onDefendClick }
     ];
 
-    let uiButtonSpacing = 0;
-    uiButtonsItems.forEach((item) => {
-      var button = this.add.button(40 + uiButtonSpacing,this.game.height - 25, item.button, item.method, this);
-      button.anchor.setTo(.5,.5);
-      button.scale.setTo(item.scale.x,item.scale.y);
-      uiButtonSpacing += 50;
-    });
-    
+    this.initUserInterface();
 
 
     this.mushroom = new Mushroom({
       game: this.game,
-      x: this.world.centerX + 80,
-      y: this.world.centerY,
+      x: this.world.centerX + 180,
+      y: this.world.centerY + 100,
       asset: 'mushroom'
     })
 
     this.game.add.existing(this.mushroom)
   }
 
-  cropLife(){
-    if(this.widthLife.width <= 0){
-      this.widthLife.width = this.totalLife;
-    }
-    else{
-      this.add.tween(this.widthLife).to( { width: (this.widthLife.width - (this.totalLife / 10)) }, 200, Phaser.Easing.Linear.None, true);
-    }
+  initUserInterface () {
+    this.playerHp = this.add.text(60, this.game.height / 12, this.player.hp + "/" + this.player.hpMax, {font: 'Patua One', fontSize: 16, fill: '#333333', smoothed: false})
+    this.playerHp.padding.set(10, 16)
+    this.playerHp.anchor.setTo(0.5)
+
+    this.mobHp = this.add.text( this.game.width - 60, this.game.height / 12, this.mob.hp + "/" + this.mob.hpMax, {font: 'Patua One', fontSize: 16, fill: '#333333', smoothed: false})
+    this.mobHp.padding.set(10, 16)
+    this.mobHp.anchor.setTo(0.5)
+
+    let uiButtonSpacing = 0;
+    this.uiButtonsItems.forEach((item) => {
+      var button = this.add.button(40 + uiButtonSpacing,this.game.height - 25, item.button, item.method, this);
+      button.anchor.setTo(.5,.5);
+      button.scale.setTo(item.scale.x,item.scale.y);
+      uiButtonSpacing += 50;
+    });
+    
   }
 
   onAttackClick() {
     console.log('Attack');
+    this.mob.hp -= 12;
   }
 
   onDefendClick() {
     console.log('Defend');
   }
 
+
+
   render () {
-    this.life.updateCrop();
+    this.clouds.forEach((cloud) => {
+      cloud.x += .03;
+    });
+    this.playerHp.setText(this.player.hp.toFixed() + "/" + this.player.hpMax);
+    this.mobHp.setText(this.mob.hp.toFixed() + "/" + this.mob.hpMax);
     if (__DEV__) {
-      this.game.debug.spriteInfo(this.mushroom, 32, 32)
+      this.game.debug.spriteInfo(this.mushroom, 132, 132)
     }
   }
 }
