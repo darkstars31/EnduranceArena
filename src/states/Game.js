@@ -11,17 +11,13 @@ export default class extends Phaser.State {
   create () {
     this.add.sprite(0,0, 'battleBackground1');
 
-    let numClouds = this.rnd.integerInRange(1, 7) ;
+    let numClouds = this.rnd.integerInRange(1, 3);
     this.clouds = [];
     for(let i = 0;i < numClouds; i++){
-      let cloud = this.add.sprite(-200,this.rnd.integerInRange(20,60), 'cloud1');
+      let cloud = this.add.sprite(this.rnd.integerInRange(-500,-160),this.rnd.integerInRange(10,80), 'cloud1');
       cloud.scale.setTo(.5,.5);
       this.clouds.push(cloud);
     }
-
-
-    this.cloud = this.add.sprite(-200,20, 'cloud1');
-    this.cloud.scale.setTo(.5,.5);
 
     this.mob = new Monster();
     this.mob.hp = this.mob.hpMax;
@@ -67,8 +63,9 @@ export default class extends Phaser.State {
   }
 
   onAttackClick() {
-    console.log('Attack');
-    this.mob.hp -= 12;
+    let damage = this.player.calculateAttack();
+    console.log('Attack: ' + damage);
+    this.mob.hp -= damage;
   }
 
   onDefendClick() {
@@ -80,6 +77,9 @@ export default class extends Phaser.State {
   render () {
     this.clouds.forEach((cloud) => {
       cloud.x += .03;
+      if(cloud.x > 900){
+        cloud.x = this.rnd.integerInRange(-500,-160);
+      }
     });
     this.playerHp.setText(this.player.hp.toFixed() + "/" + this.player.hpMax);
     this.mobHp.setText(this.mob.hp.toFixed() + "/" + this.mob.hpMax);
