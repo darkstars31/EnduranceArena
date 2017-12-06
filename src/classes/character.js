@@ -3,7 +3,7 @@ import Phaser from 'phaser'
 export default class Character {
 
   constructor () {
-
+	
 	this.level = 1;
 	this.statPoints = 0;
 

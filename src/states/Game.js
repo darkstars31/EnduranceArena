@@ -9,42 +9,35 @@ export default class extends Phaser.State {
   preload () {}
 
   create () {
+    this.attackAudio = this.add.audio('audioHit');
+
     let isPlayersTurn = true;
     this.buttonList = [];
 
     let background = this.add.sprite(0,0, 'battleBackground1');
-    background.scale.setTo(.68,.68);
+    background.scale.setTo(.7,.7);
 
-    let playerSprite = this.add.sprite(this.world.width /4, this.world.height / 2, 'noviceWalk');
-    playerSprite.scale.x = -1;
-    playerSprite.anchor.setTo(.5,.5);
-    playerSprite.animations.add('walk');
-    playerSprite.animations.play('walk', 10, true);
-
-    let numClouds = this.rnd.integerInRange(1, 3);
-    this.clouds = [];
-    for(let i = 0;i < numClouds; i++){
-      let cloud = this.add.sprite(this.rnd.integerInRange(-500,-160),this.rnd.integerInRange(10,80), 'cloud1');
-      cloud.scale.setTo(.5,.5);
-      this.clouds.push(cloud);
-    }
 
     this.mob = new Monster();
     this.mob.hp = this.mob.hpMax;
+    this.mob.sprite.play('idle', 10, true);
     
     this.player = new Player();
     this.player.hp = this.player.hpMax;
+    this.player.sprite.animations.play('walk',10, true);
     
     this.uiButtonsItems = [
-      { button: 'attackButton', scale: {x: .75, y: .75}, method: this.onAttackClick },
-      { button: 'shieldButton', scale: {x: .6, y: .55}, method: this.onDefendClick }
+      { button: 'attackButton', scale: {x: .5, y: .5}, method: this.onAttackClick },
+      { button: 'shieldButton', scale: {x: .5, y: .5}, method: this.onDefendClick },
+      { button: 'healthPotButton', scale: {x: .5, y: .5}, method: this.onDefendClick }
     ];
 
+    this.cloudGeneration();
     this.initUserInterface();
 
     this.mushroom = new Mushroom({
       game: this.game,
-      x: this.world.width /4,
+      x: this.world.width /3,
       y: this.world.height / 2 - 45,
       asset: 'mushroom'
     })
@@ -63,10 +56,10 @@ export default class extends Phaser.State {
 
     let uiButtonSpacing = 0;
     this.uiButtonsItems.forEach((item) => {
-      var button = this.add.button(40 + uiButtonSpacing,this.game.height - 25, item.button, item.method, this);
+      var button = this.add.button(60 + uiButtonSpacing,this.game.height - 40, item.button, item.method, this);
       button.anchor.setTo(.5,.5);
       button.scale.setTo(item.scale.x,item.scale.y);
-      uiButtonSpacing += 50;
+      uiButtonSpacing += 60;
       this.buttonList.push(button);
     });   
     
@@ -74,6 +67,7 @@ export default class extends Phaser.State {
 
   onAttackClick() {
     this.isPlayersTurn = false;
+    this.attackAudio.play();
     let damage = this.player.calculateAttack();
     console.log('Attack: ' + damage);
     this.mob.hp -= damage;
@@ -83,11 +77,21 @@ export default class extends Phaser.State {
     console.log('Defend');
   }
 
-
+  cloudGeneration() {
+    let numClouds = this.rnd.integerInRange(1, 3);
+    this.clouds = [];
+    for(let i = 0;i < numClouds; i++){
+      let cloud = this.add.sprite(this.rnd.integerInRange(-400,-160),this.rnd.integerInRange(8,60), 'cloud1');
+      let cloudScale = this.rnd.integerInRange(1,5) / 14;
+      cloud.scale.setTo(cloudScale,cloudScale);
+      cloud.speed = cloudScale;
+      this.clouds.push(cloud);
+    }
+  }
 
   render () {
     this.clouds.forEach((cloud) => {
-      cloud.x += .03;
+      cloud.x += cloud.speed / 2;
       if(cloud.x > 900){
         cloud.x = this.rnd.integerInRange(-500,-160);
       }
