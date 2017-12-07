@@ -9,13 +9,20 @@ export default class extends Phaser.State {
   preload () {}
 
   create () {
-    this.attackAudio = this.add.audio('audioHit');
-
-    let isPlayersTurn = true;
-    this.buttonList = [];
-
     let background = this.add.sprite(0,0, 'battleBackground1');
     background.scale.setTo(.7,.7);
+
+    this.audioItems = [];
+    this.audioItems.push(this.add.audio('audioHit1'));
+    this.audioItems.push(this.add.audio('audioHit2'));
+    this.audioItems.push(this.add.audio('audioHit3'));
+    
+
+    this.bannerText = 'Stage Complete';
+    this.banner = this.add.text(this.world.centerX, this.game.height / 6, this.bannerText, {font: 'Bangers', fontSize: 60, fill: '#77BFA3', smoothed: false});
+    this.banner.padding.set(10, 16);
+    this.banner.anchor.setTo(0.5);
+    this.banner.visible = false;
 
 
     this.mob = new Monster();
@@ -26,14 +33,16 @@ export default class extends Phaser.State {
     this.player.hp = this.player.hpMax;
     this.player.sprite.animations.play('walk',10, true);
     
+    this.buttonList = [];
     this.uiButtonsItems = [
       { button: 'attackButton', scale: {x: .5, y: .5}, method: this.onAttackClick },
       { button: 'shieldButton', scale: {x: .5, y: .5}, method: this.onDefendClick },
       { button: 'healthPotButton', scale: {x: .5, y: .5}, method: this.onDefendClick }
     ];
+    this.initUserInterface();
 
     this.cloudGeneration();
-    this.initUserInterface();
+    this.isPlayersTurn = true;
 
     this.mushroom = new Mushroom({
       game: this.game,
@@ -61,12 +70,12 @@ export default class extends Phaser.State {
       button.scale.setTo(item.scale.x,item.scale.y);
       uiButtonSpacing += 60;
       this.buttonList.push(button);
-    });   
-    
+    });       
   }
 
   onAttackClick() {
     this.isPlayersTurn = false;
+    this.attackAudio = this.audioItems[this.rnd.integerInRange(0,this.audioItems.length - 1)];
     this.attackAudio.play();
     let damage = this.player.calculateAttack();
     console.log('Attack: ' + damage);
@@ -75,6 +84,7 @@ export default class extends Phaser.State {
 
   onDefendClick() {
     console.log('Defend');
+    this.isPlayersTurn = false;
   }
 
   cloudGeneration() {
@@ -97,16 +107,25 @@ export default class extends Phaser.State {
       }
     });
 
-    if(this.isPlayersTurn){
-      this.buttonList.forEach((item)=> item.inputEnable = true);
-    } else {      
-      this.buttonList.forEach((item)=> item.inputEnable = false);      
-      this.player.hp -= this.mob.strength + this.rnd.integerInRange(4,5);
-      this.isPlayersTurn = true;
+    this.playerHp.setText( (this.player.hp > 0 ? this.player.hp.toFixed(): 0) + "/" + this.player.hpMax);      
+    this.mobHp.setText( (this.mob.hp > 0 ? this.mob.hp.toFixed() : 0) + "/" + this.mob.hpMax);
+
+    if(this.player.isAlive() && this.mob.isAlive()){
+      if(this.isPlayersTurn){
+        this.buttonList.forEach((item)=> item.inputEnabled = true);
+      } else {      
+        this.buttonList.forEach((item)=> item.inputEnabled = false);      
+        this.player.hp -= this.mob.strength + this.rnd.integerInRange(4,5);
+        this.isPlayersTurn = true;
+      }
+    } else {
+      this.buttonList.forEach((item)=> item.inputEnabled = false);    
+      if(!this.player.isAlive()) {
+        this.banner.text = "YOU DIED";
+      }
+      this.banner.visible = true;
     }
 
-    this.playerHp.setText( (this.player.hp > 0 ? this.player.hp.toFixed(): 0) + "/" + this.player.hpMax);
-    this.mobHp.setText( (this.mob.hp > 0 ? this.mob.hp.toFixed() : 0) + "/" + this.mob.hpMax);
     if (__DEV__) {
       this.game.debug.spriteInfo(this.mushroom, 130, 10)
     }

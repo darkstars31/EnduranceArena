@@ -16,7 +16,11 @@ export default class Character {
 
 	this.hp = 0;
 	this.hpMax = Math.floor(this.vitality * 20 + this.level * 3 + 35);
-  }
+	}
+	
+	isAlive() {
+		return this.hp >= 0 ? true : false;
+	}
 
   calculateHp () {
       this.hp = this.hp.toFixed();

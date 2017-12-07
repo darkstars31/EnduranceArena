@@ -25,6 +25,8 @@ export default class extends Phaser.State {
     this.load.image('attackButton', './assets/images/ui/attackButton.png')
     this.load.image('shieldButton', './assets/images/ui/shieldButton.png')
     this.load.image('healthPotButton', './assets/images/ui/healthPotButton.png')
+    this.load.image('musicOn', './assets/images/ui/musicOn.png')
+    this.load.image('musicOff', './assets/images/ui/musicOff.png')
 
     this.load.image('battleBackground1', './assets/images/battlebackgrounds/battleback1.png')
     this.load.image('cloud1', './assets/images/cloud.png')
@@ -34,9 +36,31 @@ export default class extends Phaser.State {
 
     this.load.spritesheet('poringIdle', './assets/images/spritesheets/poring.png', 60, 60, 4, 0, 0)
     
+    this.load.audio('battleStage','./assets/audio/prologue.ogg')
     this.load.audio('audioMenuSelect','./assets/audio/MENU_Select.ogg')
-    this.load.audio('audioHit','./assets/audio/hit.ogg')
+    this.load.audio('audioHit1','./assets/audio/hit1.ogg')
+    this.load.audio('audioHit2','./assets/audio/hit2.ogg')
+    this.load.audio('audioHit3','./assets/audio/hit3.ogg')
     
+  }
+
+  create () {
+    var music = this.add.audio('battleStage').play();
+    music.volume = .1;
+
+    var soundToggle = game.add.sprite(game.width - 40, game.height - 40, 'musicOn');
+    soundToggle.tint = 0xe2e2e2;
+    game.stage.addChild(soundToggle);
+    soundToggle.inputEnabled = true;
+    soundToggle.events.onInputUp.add(() => {
+          if(music.volume != 0){
+            music.volume = 0;
+            soundToggle.loadTexture('musicOff');
+          } else {
+            music.volume = 0.1;
+            soundToggle.loadTexture('musicOn');
+          }
+    });
   }
 
   render () {
