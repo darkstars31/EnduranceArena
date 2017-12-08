@@ -19,7 +19,7 @@ export default class Character {
 	}
 	
 	isAlive() {
-		return this.hp >= 0 ? true : false;
+		return this.hp > 1 ? true : false;
 	}
 
   calculateHp () {

@@ -11,6 +11,7 @@ export default class extends Phaser.State {
   create () {
     let background = this.add.sprite(0,0, 'battleBackground1');
     background.scale.setTo(.7,.7);
+    this.cloudGeneration();
 
     this.audioItems = [];
     this.audioItems.push(this.add.audio('audioHit1'));
@@ -41,7 +42,6 @@ export default class extends Phaser.State {
     ];
     this.initUserInterface();
 
-    this.cloudGeneration();
     this.isPlayersTurn = true;
 
     this.mushroom = new Mushroom({
@@ -92,7 +92,7 @@ export default class extends Phaser.State {
     this.clouds = [];
     for(let i = 0;i < numClouds; i++){
       let cloud = this.add.sprite(this.rnd.integerInRange(-400,-160),this.rnd.integerInRange(8,60), 'cloud1');
-      let cloudScale = this.rnd.integerInRange(1,5) / 14;
+      let cloudScale = this.rnd.integerInRange(2,5) / 13;
       cloud.scale.setTo(cloudScale,cloudScale);
       cloud.speed = cloudScale;
       this.clouds.push(cloud);
@@ -121,13 +121,14 @@ export default class extends Phaser.State {
     } else {
       this.buttonList.forEach((item)=> item.inputEnabled = false);    
       if(!this.player.isAlive()) {
+        this.banner.fill = 'red';
         this.banner.text = "YOU DIED";
       }
       this.banner.visible = true;
     }
 
     if (__DEV__) {
-      this.game.debug.spriteInfo(this.mushroom, 130, 10)
+      //this.game.debug.spriteInfo(this.mushroom, 130, 10)
     }
   }
 }

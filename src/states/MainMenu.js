@@ -6,10 +6,12 @@ export default class extends Phaser.State {
   preload () {}
 
   create () {
+    this.menuItemHover = null;
+    this.menuItemHoverAudio = this.add.audio('audioMenuHover');
     this.stage.disableVisibilityChange = true;
 
     const bannerText = 'Endurance Arena'
-    let banner = this.add.text(this.world.centerX, this.game.height / 6, bannerText, {font: 'Bangers', fontSize: 40, fill: '#77BFA3', smoothed: false})
+    let banner = this.add.text(this.world.centerX, this.game.height / 6, bannerText, {font: 'Bangers', fontSize: 50, fill: '#77BFA3', smoothed: false})
     banner.padding.set(10, 16)
     banner.anchor.setTo(0.5)
 
@@ -19,14 +21,14 @@ export default class extends Phaser.State {
                 ];
     let menuSpacing = 0;
     menuItems.forEach( (menuItem) => {
-        let item = this.add.text(this.world.centerX, this.game.height / 3 + menuSpacing, menuItem.label, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
+        let item = this.add.text(this.world.centerX, this.game.height / 3 + menuSpacing, menuItem.label, {font: 'Bangers', fontSize: 30, fill: '#77BFA3', smoothed: false})
         item.padding.set(10, 16)
         menuItem.gameObject = item;
         item.anchor.setTo(0.5)  
         item.inputEnabled = menuItem.inputEnabled;
         item.useHandCursor = true;
         this.addInputs(item);
-        menuSpacing += 32;
+        menuSpacing += 36;
     });
 
   }
@@ -34,11 +36,18 @@ export default class extends Phaser.State {
   addInputs(item) {
     item.events.onInputUp.add(()=>   {this.onMenuItemClick(item)});   
     item.events.onInputOver.add(()=> {this.onMenuItemHover(item)});
-    item.events.onInputOut.add(()=>  { console.log('Out')});
+    item.events.onInputOut.add(()=>  {this.onMenuItemOut(item)});
   }
 
   onMenuItemHover(item) {
+    this.menuItemHover = game.add.sprite(item.position.x - 75, item.position.y + 10, 'menuCursor');
+    this.menuItemHover.anchor.setTo(.5,.5);
+    this.menuItemHover.scale.setTo(1.3,1.3);
+    this.menuItemHoverAudio.play();
+  }
 
+  onMenuItemOut(item) {
+    this.menuItemHover.destroy();
   }
 
   onMenuItemClick(item) {
@@ -50,12 +59,12 @@ export default class extends Phaser.State {
         case 'Continue':
             break;
         case 'Settings':
+            this.state.start('Settings'); 
             break;
         default: console.log("WTF, how did you even?"); break;         
     }
   }
 
   render () {
-    if (__DEV__) { }
   }
 }

@@ -22,11 +22,14 @@ export default class extends Phaser.State {
     this.load.image('loaderBg', './assets/images/loader-bg.png')
     this.load.image('loaderBar', './assets/images/loader-bar.png')
 
+    this.load.image('menuCursor', './assets/images/ui/menuCursor.png')
+
     this.load.image('attackButton', './assets/images/ui/attackButton.png')
     this.load.image('shieldButton', './assets/images/ui/shieldButton.png')
     this.load.image('healthPotButton', './assets/images/ui/healthPotButton.png')
     this.load.image('musicOn', './assets/images/ui/musicOn.png')
     this.load.image('musicOff', './assets/images/ui/musicOff.png')
+    this.load.image('arrowUpKey', './assets/images/ui/arrowUpKey.png')
 
     this.load.image('battleBackground1', './assets/images/battlebackgrounds/battleback1.png')
     this.load.image('cloud1', './assets/images/cloud.png')
@@ -38,6 +41,7 @@ export default class extends Phaser.State {
     
     this.load.audio('battleStage','./assets/audio/prologue.ogg')
     this.load.audio('audioMenuSelect','./assets/audio/MENU_Select.ogg')
+    this.load.audio('audioMenuHover','./assets/audio/menuHover.ogg')
     this.load.audio('audioHit1','./assets/audio/hit1.ogg')
     this.load.audio('audioHit2','./assets/audio/hit2.ogg')
     this.load.audio('audioHit3','./assets/audio/hit3.ogg')
@@ -46,7 +50,7 @@ export default class extends Phaser.State {
 
   create () {
     var music = this.add.audio('battleStage').play();
-    music.volume = .1;
+    music.volume = .2;
 
     var soundToggle = game.add.sprite(game.width - 40, game.height - 40, 'musicOn');
     soundToggle.tint = 0xe2e2e2;
@@ -57,7 +61,7 @@ export default class extends Phaser.State {
             music.volume = 0;
             soundToggle.loadTexture('musicOff');
           } else {
-            music.volume = 0.1;
+            music.volume = 0.2;
             soundToggle.loadTexture('musicOn');
           }
     });
