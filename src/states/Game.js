@@ -28,11 +28,10 @@ export default class extends Phaser.State {
 
     this.mob = new Monster();
     this.mob.hp = this.mob.hpMax;
-    this.mob.sprite.play('idle', 10, true);
+   
     
     this.player = new Player();
     this.player.hp = this.player.hpMax;
-    this.player.sprite.animations.play('walk',10, true);
     
     this.buttonList = [];
     this.uiButtonsItems = [
@@ -56,11 +55,9 @@ export default class extends Phaser.State {
 
   initUserInterface () {
     this.playerHp = this.add.text(60, this.game.height / 12, this.player.hp + "/" + this.player.hpMax, {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
-    this.playerHp.padding.set(10, 16)
     this.playerHp.anchor.setTo(0.5)
 
     this.mobHp = this.add.text( this.game.width - 60, this.game.height / 12, this.mob.hp + "/" + this.mob.hpMax, {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
-    this.mobHp.padding.set(10, 16)
     this.mobHp.anchor.setTo(0.5)
 
     let uiButtonSpacing = 0;
@@ -92,7 +89,7 @@ export default class extends Phaser.State {
     this.clouds = [];
     for(let i = 0;i < numClouds; i++){
       let cloud = this.add.sprite(this.rnd.integerInRange(-400,-160),this.rnd.integerInRange(8,60), 'cloud1');
-      let cloudScale = this.rnd.integerInRange(2,5) / 13;
+      let cloudScale = this.rnd.integerInRange(2,5) / 12;
       cloud.scale.setTo(cloudScale,cloudScale);
       cloud.speed = cloudScale;
       this.clouds.push(cloud);
@@ -115,7 +112,7 @@ export default class extends Phaser.State {
         this.buttonList.forEach((item)=> item.inputEnabled = true);
       } else {      
         this.buttonList.forEach((item)=> item.inputEnabled = false);      
-        this.player.hp -= this.mob.strength + this.rnd.integerInRange(4,5);
+        this.player.hp -= this.mob.calculateAttack();
         this.isPlayersTurn = true;
       }
     } else {
@@ -125,6 +122,7 @@ export default class extends Phaser.State {
         this.banner.text = "YOU DIED";
       }
       this.banner.visible = true;
+      this.mob.animationDeath();
     }
 
     if (__DEV__) {
