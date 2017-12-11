@@ -3,6 +3,7 @@ import Phaser from 'phaser'
 import Mushroom from '../sprites/Mushroom'
 import Player from '../classes/player';
 import Monster from '../classes/monster'
+import { randomInt } from '../utils';
 
 export default class extends Phaser.State {
   init () {}
@@ -12,6 +13,7 @@ export default class extends Phaser.State {
     let background = this.add.sprite(0,0, 'battleBackground1');
     background.scale.setTo(.7,.7);
     this.cloudGeneration();
+    this.floatingCombatTextGroup = this.add.group();
 
     this.audioItems = [];
     this.audioItems.push(this.add.audio('audioHit1'));
@@ -26,7 +28,9 @@ export default class extends Phaser.State {
     this.banner.visible = false;
 
 
-    this.mob = new Monster();
+    let monster1 = this.cache.getJSON('MonsterData');
+    console.log(monster1[0]);
+    this.mob = new Monster(monster1);
     this.mob.hp = this.mob.hpMax;
    
     
@@ -75,6 +79,7 @@ export default class extends Phaser.State {
     this.attackAudio = this.audioItems[this.rnd.integerInRange(0,this.audioItems.length - 1)];
     this.attackAudio.play();
     let damage = this.player.calculateAttack();
+    this.floatingCombatText(damage, this.mob);
     console.log('Attack: ' + damage);
     this.mob.hp -= damage;
   }
@@ -82,6 +87,25 @@ export default class extends Phaser.State {
   onDefendClick() {
     console.log('Defend');
     this.isPlayersTurn = false;
+  }
+
+  floatingCombatText(damage, obj){
+        var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
+        var damageText = this.add.text(background.x, background.y + 6, damage, {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
+        
+        background.scale.setTo(.6,.6);
+        background.anchor.setTo(.5,.5);
+        damageText.scale.setTo(.6,.6);
+        damageText.anchor.setTo(.5,.5);
+        this.add.tween(background).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        this.add.tween(damageText).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        this.add.tween(background.scale).to({ x: 1, y: 1}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        this.add.tween(damageText.scale).to({ x: 1, y: 1}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        this.add.tween(background).to({ alpha: 0}, 3000, "Quart.easeOut",true, 0, 0, 0);
+        this.add.tween(damageText).to({ alpha: 0}, 3000, "Quart.easeOut",true, 0, 0, 0);
+
+        this.floatingCombatTextGroup.add(background);
+        this.floatingCombatTextGroup.add(damageText);
   }
 
   cloudGeneration() {
@@ -111,9 +135,14 @@ export default class extends Phaser.State {
       if(this.isPlayersTurn){
         this.buttonList.forEach((item)=> item.inputEnabled = true);
       } else {      
-        this.buttonList.forEach((item)=> item.inputEnabled = false);      
-        this.player.hp -= this.mob.calculateAttack();
         this.isPlayersTurn = true;
+        setTimeout(() => {
+          this.buttonList.forEach((item)=> item.inputEnabled = false);      
+          let damage = this.mob.calculateAttack();
+          this.floatingCombatText(damage, this.player);
+          this.player.hp -= damage;
+        }, randomInt(200,800));
+       
       }
     } else {
       this.buttonList.forEach((item)=> item.inputEnabled = false);    

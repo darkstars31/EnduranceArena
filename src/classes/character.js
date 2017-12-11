@@ -3,9 +3,10 @@ import { randomInt } from '../utils';
 
 export default class Character {
 
-  constructor () {
-	
+  constructor (obj) {
+	console.log(obj);
 	this.level = 1;
+	this.shmeckles = 0;
 	
 	this.statPoints = 0;
 
@@ -17,11 +18,15 @@ export default class Character {
 	this.luck = 1;
 
 	this.hp = 0;
-	this.hpMax = Math.floor(this.vitality * 20 + this.level * 3 + 35);
+	this.hpMax = this.calculateMaxHp();
 	}
 	
 	isAlive() {
 		return this.hp > 0 ? true : false;
+	}
+
+	calculateMaxHp () {
+		return Math.floor(this.vitality * 20 + this.level * 3 + 35);
 	}
 
 	calculateAttack() {

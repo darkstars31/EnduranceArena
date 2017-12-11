@@ -1,0 +1,16 @@
+
+[
+    {
+        "name": "Poring",
+        "level": 1,
+        "stats": {
+            "strength" : 1,
+            "agility" : 1,
+            "dexterity" : 1,
+            "vitality" : 1,
+            "intelligence" : 1,
+            "luck" : 1
+        }
+
+    }
+]
