@@ -51,7 +51,7 @@ export default class extends Phaser.State {
     this.load.spritesheet('poringIdle', './assets/images/spritesheets/poring.png', 60, 60, 4, 0, 0)
     this.load.spritesheet('poringAttack', './assets/images/spritesheets/poringAttack.png', 60, 45, 7, 0, 0)
     this.load.spritesheet('poringDamaged', './assets/images/spritesheets/poringDamaged.png', 52, 53, 2, 0, 0)
-    this.load.spritesheet('poringDeath', './assets/images/spritesheets/poringDeath.png', 110, 75, 4, 0, 0)
+    this.load.spritesheet('poringDeath', './assets/images/spritesheets/poringDeath.png', 96, 75, 5, 0, 0)
     
     
     // Audio

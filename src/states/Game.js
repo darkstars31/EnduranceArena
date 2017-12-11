@@ -49,7 +49,7 @@ export default class extends Phaser.State {
 
     this.mushroom = new Mushroom({
       game: this.game,
-      x: this.world.width /3,
+      x: this.player.sprite.x,
       y: this.world.height / 2 - 45,
       asset: 'mushroom'
     })
@@ -81,6 +81,7 @@ export default class extends Phaser.State {
     let damage = this.player.calculateAttack();
     this.floatingCombatText(damage, this.mob);
     console.log('Attack: ' + damage);
+    this.mob.animationHurt();
     this.mob.hp -= damage;
   }
 
@@ -90,26 +91,26 @@ export default class extends Phaser.State {
   }
 
   floatingCombatText(damage, obj){
-        var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
-        var damageText = this.add.text(background.x, background.y + 6, damage, {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
+        //var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
+        var damageText = this.add.text(obj.sprite.x, obj.sprite.y + 6, damage, {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
         
-        background.scale.setTo(.6,.6);
-        background.anchor.setTo(.5,.5);
-        damageText.scale.setTo(.6,.6);
-        damageText.anchor.setTo(.5,.5);
-        this.add.tween(background).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        //background.scale.setTo(.6,.6);
+        //background.anchor.setTo(.5);
+        damageText.scale.setTo(.7,.7);
+        damageText.anchor.setTo(.5);
+       // this.add.tween(background).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
         this.add.tween(damageText).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
-        this.add.tween(background.scale).to({ x: 1, y: 1}, 2000, "Quart.easeOut",true, 0, 0, 0);
-        this.add.tween(damageText.scale).to({ x: 1, y: 1}, 2000, "Quart.easeOut",true, 0, 0, 0);
-        this.add.tween(background).to({ alpha: 0}, 3000, "Quart.easeOut",true, 0, 0, 0);
+        //this.add.tween(background.scale).to({ x: 1, y: 1}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        this.add.tween(damageText.scale).to({ x: 1.2, y: 1.2}, 2000, "Quart.easeOut",true, 0, 0, 0);
+       // this.add.tween(background).to({ alpha: 0}, 3000, "Quart.easeOut",true, 0, 0, 0);
         this.add.tween(damageText).to({ alpha: 0}, 3000, "Quart.easeOut",true, 0, 0, 0);
 
-        this.floatingCombatTextGroup.add(background);
+      //  this.floatingCombatTextGroup.add(background);
         this.floatingCombatTextGroup.add(damageText);
   }
 
   cloudGeneration() {
-    let numClouds = this.rnd.integerInRange(1, 3);
+    let numClouds = this.rnd.integerInRange(1, 10);
     this.clouds = [];
     for(let i = 0;i < numClouds; i++){
       let cloud = this.add.sprite(this.rnd.integerInRange(-400,-160),this.rnd.integerInRange(8,60), 'cloud1');
@@ -150,10 +151,14 @@ export default class extends Phaser.State {
         this.banner.fill = 'red';
         this.banner.text = "YOU DIED";
       }
+      if(!this.mob.isAlive()){
+        this.mob.animationDeath();
+        
+      }
       this.banner.visible = true;
-      this.mob.animationDeath();
     }
 
+    this.mushroom.x = this.player.sprite.x;
     if (__DEV__) {
       //this.game.debug.spriteInfo(this.mushroom, 130, 10)
     }

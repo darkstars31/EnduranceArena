@@ -10,7 +10,8 @@ export default class Player extends character {
   }
 
   animationSetup() {
-    this.sprite = game.add.sprite(game.world.width /3, game.world.height / 2, 'noviceAtlas');
+    this.sprite = game.add.sprite(- 100, game.world.height / 2, 'noviceAtlas');
+    game.add.tween(this.sprite).to({x: game.world.width /3}, 2000, 'Linear',true);
     //this.sprite1 = game.add.sprite(game.world.width /3, game.world.height / 2 - 60, 'damageAtlas','lucky'); loading a specific frame from an Atlas
     this.sprite.scale.x = -1;
     this.sprite.anchor.setTo(.5,.5);
