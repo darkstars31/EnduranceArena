@@ -20,5 +20,22 @@ export default class Player extends character {
     this.animations = [];
   }
 
+  animationIdle() {
+    this.sprite.loadTexture('noviceAtlas');
+    this.sprite.animations.add('idle');
+    this.sprite.play('walk', 10, true);
+  }
+
+  animationDeath(){
+      this.sprite.loadTexture('noviceDeath');
+      this.sprite.animations.add('death');
+      this.sprite.play('death', 6, false);
+  }
+
+  animationHurt() {
+      this.sprite.loadTexture('noviceDamaged');
+      this.sprite.animations.add('hurt').onComplete.add(()=>{this.animationIdle()});
+      this.sprite.play('hurt', 6, false);
+  }
 
 }

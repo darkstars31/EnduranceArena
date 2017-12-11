@@ -91,21 +91,21 @@ export default class extends Phaser.State {
   }
 
   floatingCombatText(damage, obj){
-        //var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
+        var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
         var damageText = this.add.text(obj.sprite.x, obj.sprite.y + 6, damage, {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
         
-        //background.scale.setTo(.6,.6);
-        //background.anchor.setTo(.5);
+        background.scale.setTo(.6,.6);
+        background.anchor.setTo(.5);
         damageText.scale.setTo(.7,.7);
         damageText.anchor.setTo(.5);
-       // this.add.tween(background).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
+       this.add.tween(background).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
         this.add.tween(damageText).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
-        //this.add.tween(background.scale).to({ x: 1, y: 1}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        this.add.tween(background.scale).to({ x: 1, y: 1}, 2000, "Quart.easeOut",true, 0, 0, 0);
         this.add.tween(damageText.scale).to({ x: 1.2, y: 1.2}, 2000, "Quart.easeOut",true, 0, 0, 0);
-       // this.add.tween(background).to({ alpha: 0}, 3000, "Quart.easeOut",true, 0, 0, 0);
+       this.add.tween(background).to({ alpha: 0}, 3000, "Quart.easeOut",true, 0, 0, 0);
         this.add.tween(damageText).to({ alpha: 0}, 3000, "Quart.easeOut",true, 0, 0, 0);
 
-      //  this.floatingCombatTextGroup.add(background);
+       this.floatingCombatTextGroup.add(background);
         this.floatingCombatTextGroup.add(damageText);
   }
 
@@ -141,6 +141,7 @@ export default class extends Phaser.State {
           this.buttonList.forEach((item)=> item.inputEnabled = false);      
           let damage = this.mob.calculateAttack();
           this.floatingCombatText(damage, this.player);
+          this.player.animationHurt();
           this.player.hp -= damage;
         }, randomInt(200,800));
        
@@ -150,6 +151,7 @@ export default class extends Phaser.State {
       if(!this.player.isAlive()) {
         this.banner.fill = 'red';
         this.banner.text = "YOU DIED";
+        this.player.animationDeath();
       }
       if(!this.mob.isAlive()){
         this.mob.animationDeath();
@@ -158,7 +160,7 @@ export default class extends Phaser.State {
       this.banner.visible = true;
     }
 
-    this.mushroom.x = this.player.sprite.x;
+    //this.mushroom.x = this.player.sprite.x;
     if (__DEV__) {
       //this.game.debug.spriteInfo(this.mushroom, 130, 10)
     }

@@ -44,6 +44,8 @@ export default class extends Phaser.State {
 
     // Animations
     this.load.atlas('noviceAtlas', './assets/images/spritesheets/playerWalk.png','./assets/images/spritesheets/atlases/playerWalk.json')
+    this.load.spritesheet('noviceDamaged', './assets/images/spritesheets/noviceHurt.png', 48, 86, 3)
+    this.load.spritesheet('noviceDeath', './assets/images/spritesheets/noviceDeath.png', 72, 86, 1)
 
     this.load.spritesheet('noviceIdle', './assets/images/spritesheets/playerWalkSheet.png', 47, 86, 1, 1, 0)
     this.load.spritesheet('noviceWalk', './assets/images/spritesheets/playerWalkSheet.png', 47, 86, 8, 2, 0)
