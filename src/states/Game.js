@@ -90,9 +90,26 @@ export default class extends Phaser.State {
   }
 
   healthBars(){
-    var graphics = this.add.graphics(100,100);
-    graphics.lineStyle(2, 0x0000FF, 1);
-    graphics.drawRect(50, 250, 100, 100);
+    var meters = game.add.group();
+    var meterBackgroundBitmap = game.add.bitmapData(250, 12);
+    meterBackgroundBitmap.ctx.beginPath();
+    meterBackgroundBitmap.ctx.rect(0, 0, meterBackgroundBitmap.width, meterBackgroundBitmap.height);
+    meterBackgroundBitmap.ctx.fillStyle = '#000000';
+    meterBackgroundBitmap.ctx.fill();
+    // create a Sprite using the background bitmap data
+    var healthMeterBG = game.add.sprite(90, 25, meterBackgroundBitmap);
+    meters.add(healthMeterBG);
+
+    // create a red rectangle to use as the health meter itself
+    var healthBitmap = game.add.bitmapData(240, 7);
+    healthBitmap.ctx.beginPath();
+    healthBitmap.ctx.rect(0, 0, healthBitmap.width, healthBitmap.height);
+    healthBitmap.ctx.fillStyle = '#FF0000';
+    healthBitmap.ctx.fill();
+ 
+    // create the health Sprite using the red rectangle bitmap data
+    var health = game.add.sprite(94, 27, healthBitmap);
+    meters.add(health);
   }
 
   floatingCombatText(damage, obj){
