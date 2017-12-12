@@ -11,12 +11,13 @@ export default class extends Phaser.State {
     this.stage.disableVisibilityChange = true;
 
     const bannerText = 'Endurance Arena'
-    let banner = this.add.text(this.world.centerX, this.game.height / 6, bannerText, {font: 'Bangers', fontSize: 50, fill: '#77BFA3', smoothed: false})
+    let banner = this.add.text(this.world.centerX, this.game.height / 6, bannerText, {font: 'Bangers', fontSize: 48, fill: '#77BFA3', smoothed: false})
     banner.padding.set(10, 16)
     banner.anchor.setTo(0.5)
 
     let menuItems = [{ label: 'New Game', inputEnabled: true, gameObject: null}, 
                      { label: 'Continue', inputEnabled: true, gameObject: null}, 
+                     { label: 'Stats', inputEnabled: true, gameObject: null},
                      { label: 'Settings', inputEnabled: true, gameObject: null}
                 ];
     let menuSpacing = 0;
@@ -57,6 +58,9 @@ export default class extends Phaser.State {
             this.state.start('Game'); 
             break;
         case 'Continue':
+            break;
+        case 'Stats':
+            this.state.start('Stats'); 
             break;
         case 'Settings':
             this.state.start('Settings'); 

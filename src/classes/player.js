@@ -6,7 +6,6 @@ export default class Player extends character {
 
   constructor (...args) {
     super(args);
-   this.animationSetup();
   }
 
   animationSetup() {

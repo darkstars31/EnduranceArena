@@ -14,11 +14,6 @@ export default class Monster extends character{
     this.sprite.anchor.setTo(.5);
     this.sprite.animations.add('attack');
     this.sprite.play('attack', 10, true);
-
-
-    // this.sprite1 = game.add.sprite(game.world.width / (3 / 2) + 50, game.world.height / 2, 'poringDamaged');
-    // this.sprite.animations.add('hurt');
-    // this.sprite1.play('attack', 4, true);
     
     // this.sprite2 = game.add.sprite(game.world.width / (3 / 2) + 100, game.world.height / 2, 'poringDeath');
     // this.sprite2.animations.add('death');
@@ -41,7 +36,7 @@ export default class Monster extends character{
   animationHurt() {
       this.sprite.loadTexture('poringDamaged');
       this.sprite.animations.add('hurt').onComplete.add(()=>{this.animationIdle()});
-      this.sprite.play('hurt', 10, false);
+      this.sprite.play('hurt', 8, false);
   }
 
 

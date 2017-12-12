@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import WebFont from 'webfontloader'
+import Player from '../classes/player';
 
 export default class extends Phaser.State {
   init () {
@@ -67,6 +68,11 @@ export default class extends Phaser.State {
   }
 
   create () {
+   
+    
+    this.game.player = new Player();
+    game.player.statPoints = 40;
+
     var music = this.add.audio('battleStage').play();
     music.volume = .2;
 
