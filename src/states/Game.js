@@ -41,7 +41,7 @@ export default class extends Phaser.State {
     this.uiButtonsItems = [
       { button: 'attackButton', scale: {x: .5, y: .5}, method: this.onAttackClick },
       { button: 'shieldButton', scale: {x: .5, y: .5}, method: this.onDefendClick },
-      { button: 'healthPotButton', scale: {x: .5, y: .5}, method: this.onDefendClick }
+      { button: 'healthPotButton', scale: {x: .5, y: .5}, method: this.onHealthPotClick }
     ];
     this.initUserInterface();
 
@@ -76,6 +76,7 @@ export default class extends Phaser.State {
   }
 
   onAttackClick() {
+    this.disableButtons();                  
     this.attackAudio = this.audioItems[this.rnd.integerInRange(0,this.audioItems.length - 1)];
     this.attackAudio.play();
     let damage = game.player.calculateAttack();
@@ -85,36 +86,49 @@ export default class extends Phaser.State {
   }
 
   onDefendClick() {
-    console.log('Defend');
+    this.disableButtons();                  
     this.isPlayersTurn = false;
   }
 
+  onHealthPotClick() {
+    this.disableButtons();                  
+    game.player.recieveDamage(-1* (game.player.hpMax/2)).onComplete.add(()=> this.isPlayersTurn = false);
+  }
+
+  disableButtons() {
+    this.buttonList.forEach((item)=> {item.inputEnabled = false; item.tint = '0x616161'});                      
+  }
+
   healthBars(){
+    let barLocationX = 93;
+    let barLocationY = 26;
+    let barWidth = 242;
+    let barHeight = 10;
     var meters = game.add.group();
-    var meterBackgroundBitmap = game.add.bitmapData(250, 12);
+    var meterBackgroundBitmap = game.add.bitmapData(barWidth, barHeight);
     meterBackgroundBitmap.ctx.beginPath();
     meterBackgroundBitmap.ctx.rect(0, 0, meterBackgroundBitmap.width, meterBackgroundBitmap.height);
-    meterBackgroundBitmap.ctx.fillStyle = '#000000';
+    meterBackgroundBitmap.ctx.fillStyle = '#37474F';
     meterBackgroundBitmap.ctx.fill();
     // create a Sprite using the background bitmap data
-    var healthMeterBG = game.add.sprite(90, 25, meterBackgroundBitmap);
+    var healthMeterBG = game.add.sprite(barLocationX, barLocationY, meterBackgroundBitmap);
     meters.add(healthMeterBG);
 
     // create a red rectangle to use as the health meter itself
-    var healthBitmap = game.add.bitmapData(240, 7);
+    var healthBitmap = game.add.bitmapData(barWidth - 4, barHeight - 4);
     healthBitmap.ctx.beginPath();
     healthBitmap.ctx.rect(0, 0, healthBitmap.width, healthBitmap.height);
-    healthBitmap.ctx.fillStyle = '#FF0000';
+    healthBitmap.ctx.fillStyle = '#F44336';
     healthBitmap.ctx.fill();
  
     // create the health Sprite using the red rectangle bitmap data
-    var health = game.add.sprite(94, 27, healthBitmap);
+    var health = game.add.sprite(barLocationX + 2, barLocationY + 2, healthBitmap);
     meters.add(health);
   }
 
   floatingCombatText(damage, obj){
         var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
-        var damageText = this.add.text(obj.sprite.x, obj.sprite.y + 6, damage, {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
+        var damageText = this.add.text(obj.sprite.x, obj.sprite.y + 6, Math.abs(damage), {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
         
         background.scale.setTo(.6,.6);
         background.anchor.setTo(.5);
@@ -155,15 +169,13 @@ export default class extends Phaser.State {
     this.mobHp.setText( (this.mob.hp > 0 ? this.mob.hp.toFixed() : 0) + "/" + this.mob.hpMax);
 
     if(game.player.isAlive() && this.mob.isAlive()){
-        if(!this.isPlayersTurn && this.mob.isAlive()) {    
-        this.isPlayersTurn = true;  
-        this.buttonList.forEach((item)=> item.inputEnabled = false);              
+        if(!this.isPlayersTurn && this.mob.isAlive()) {  
+          let damage = this.mob.calculateAttack();  
         setTimeout(() => {
-          let damage = this.mob.calculateAttack();
           this.floatingCombatText(damage, game.player);
           game.player.recieveDamage(damage).onComplete.add(()=> {
-                    this.buttonList.forEach((item)=> item.inputEnabled = true); this.isPlayersTurn = true;});
-        }, randomInt(200,800));
+                    this.buttonList.forEach((item)=> {item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
+        }, randomInt(200));
        
       }
     } else {

@@ -27,6 +27,9 @@ export default class Character {
 
 	recieveDamage(damage) {
 		this.animationHurt();
+		if(damage < 0 && this.hp + damage > this.hpMax){
+			this.hp = this.hpMax;
+		}
 		return game.add.tween(this).to({hp: this.hp - damage}, 500, Phaser.Easing.Sinusoidal.Out, true);
 	}
 
