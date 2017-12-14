@@ -31,8 +31,8 @@ export default class Character {
 	}
 
 	recieveHealing(healing) {
-		if(this.hp + healing > this.hpMax ){ healing = this.hpMax - this.hp; }
-		return game.add.tween(this).to({hp: this.hp + healing}, 500, Phaser.Easing.Sinusoidal.Out, true);		
+		// if(this.hp + healing > this.hpMax ){ healing = this.hpMax - this.hp; }
+		return game.add.tween(this).to({hp: Phaser.Math.clamp(this.hp + healing, 0, this.hpMax)}, 500, Phaser.Easing.Sinusoidal.Out, true);		
 	}
 
 	calculateMaxHp () {
