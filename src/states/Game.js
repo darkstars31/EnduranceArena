@@ -54,7 +54,7 @@ export default class extends Phaser.State {
       asset: 'mushroom'
     })
 
-    this.healthBars();
+    this.playerHealthBars();
     this.game.add.existing(this.mushroom)
   }
 
@@ -92,14 +92,14 @@ export default class extends Phaser.State {
 
   onHealthPotClick() {
     this.disableButtons();                  
-    game.player.recieveDamage(-1* (game.player.hpMax/2)).onComplete.add(()=> this.isPlayersTurn = false);
+    game.player.recieveHealing( game.player.hpMax/5 ).onComplete.add(()=> this.isPlayersTurn = false);
   }
 
   disableButtons() {
     this.buttonList.forEach((item)=> {item.inputEnabled = false; item.tint = '0x616161'});                      
   }
 
-  healthBars(){
+  playerHealthBars(){
     let barLocationX = 93;
     let barLocationY = 26;
     let barWidth = 242;
@@ -122,9 +122,22 @@ export default class extends Phaser.State {
     healthBitmap.ctx.fill();
  
     // create the health Sprite using the red rectangle bitmap data
-    var health = game.add.sprite(barLocationX + 2, barLocationY + 2, healthBitmap);
-    meters.add(health);
+    this.hpBar = game.add.sprite(barLocationX + 2, barLocationY + 2, healthBitmap);
+    this.hpBar.distanceDifference = ((this.hpBar.width - this.hpBar.x) / this.hpBar.width) * 100;
+    console.log(distanceDifference - );
+    meters.add(this.hpBar);
   }
+
+  updateHpBar(){
+      // var maxWidth = this.hpBar.width;
+      // var init = this.hpBar.x;
+      // var difference = this.maxWidth - init;
+      
+      setInterval( () => {
+        this.hpBar.width -= .01;
+    }, 500);
+  }
+  
 
   floatingCombatText(damage, obj){
         var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
@@ -191,6 +204,7 @@ export default class extends Phaser.State {
       }
       this.banner.visible = true;
     }
+    this.updateHpBar();
 
     //this.mushroom.x = game.player.sprite.x;
     if (__DEV__) {

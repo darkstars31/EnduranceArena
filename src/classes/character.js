@@ -27,10 +27,12 @@ export default class Character {
 
 	recieveDamage(damage) {
 		this.animationHurt();
-		if(damage < 0 && this.hp + damage > this.hpMax){
-			this.hp = this.hpMax;
-		}
 		return game.add.tween(this).to({hp: this.hp - damage}, 500, Phaser.Easing.Sinusoidal.Out, true);
+	}
+
+	recieveHealing(healing) {
+		if(this.hp + healing > this.hpMax ){ healing = this.hpMax - this.hp; }
+		return game.add.tween(this).to({hp: this.hp + healing}, 500, Phaser.Easing.Sinusoidal.Out, true);		
 	}
 
 	calculateMaxHp () {
