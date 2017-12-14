@@ -123,18 +123,17 @@ export default class extends Phaser.State {
  
     // create the health Sprite using the red rectangle bitmap data
     this.hpBar = game.add.sprite(barLocationX + 2, barLocationY + 2, healthBitmap);
-    this.hpBar.distanceDifference = ((this.hpBar.width - this.hpBar.x) / this.hpBar.width) * 100;
-    console.log(distanceDifference - );
+    this.hpBar.widthMax = barWidth + 2;
     meters.add(this.hpBar);
   }
 
   updateHpBar(){
-      // var maxWidth = this.hpBar.width;
-      // var init = this.hpBar.x;
-      // var difference = this.maxWidth - init;
+      let healthPercent = (game.player.hp/game.player.hpMax);
+      console.log(healthPercent);
+      console.log(this.hpBar.widthMax * healthPercent);
       
       setInterval( () => {
-        this.hpBar.width -= .01;
+        this.hpBar.width = this.hpBar.widthMax * healthPercent;
     }, 500);
   }
   
