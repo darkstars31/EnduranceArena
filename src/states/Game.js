@@ -103,7 +103,7 @@ export default class extends Phaser.State {
 
   floatingCombatText(damage, obj){
         var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
-        var damageText = this.add.text(obj.sprite.x, obj.sprite.y + 6, Math.abs(damage), {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
+        var damageText = this.add.text(obj.sprite.x + 1, obj.sprite.y + 10, Math.abs(damage), {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
         
         background.scale.setTo(.6,.6);
         background.anchor.setTo(.5);
@@ -148,7 +148,7 @@ export default class extends Phaser.State {
           let damage = this.mob.calculateAttack();  
         setTimeout(() => {
           this.floatingCombatText(damage, game.player);
-          this.healthBar.updateHpBar(damage);
+          this.healthBar.updatePlayerHpBar(damage);
           game.player.recieveDamage(damage).onComplete.add(()=> {
                     this.buttonList.forEach((item)=> {item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
         }, randomInt(200));
