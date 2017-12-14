@@ -1,9 +1,10 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
 import Mushroom from '../sprites/Mushroom'
-import Player from '../classes/player';
+import Player from '../classes/player'
 import Monster from '../classes/monster'
-import { randomInt } from '../utils';
+import HealthBar from '../classes/healthbar'
+import { randomInt } from '../utils'
 
 export default class extends Phaser.State {
   init () {}
@@ -54,7 +55,8 @@ export default class extends Phaser.State {
       asset: 'mushroom'
     })
 
-    this.playerHealthBars();
+    this.healthBar = new HealthBar();
+    this.healthBar.createHealthBar(93,26);
     this.game.add.existing(this.mushroom)
   }
 
@@ -99,45 +101,6 @@ export default class extends Phaser.State {
     this.buttonList.forEach((item)=> {item.inputEnabled = false; item.tint = '0x616161'});                      
   }
 
-  playerHealthBars(){
-    let barLocationX = 93;
-    let barLocationY = 26;
-    let barWidth = 242;
-    let barHeight = 10;
-    var meters = game.add.group();
-    var meterBackgroundBitmap = game.add.bitmapData(barWidth, barHeight);
-    meterBackgroundBitmap.ctx.beginPath();
-    meterBackgroundBitmap.ctx.rect(0, 0, meterBackgroundBitmap.width, meterBackgroundBitmap.height);
-    meterBackgroundBitmap.ctx.fillStyle = '#37474F';
-    meterBackgroundBitmap.ctx.fill();
-    // create a Sprite using the background bitmap data
-    var healthMeterBG = game.add.sprite(barLocationX, barLocationY, meterBackgroundBitmap);
-    meters.add(healthMeterBG);
-
-    // create a red rectangle to use as the health meter itself
-    var healthBitmap = game.add.bitmapData(barWidth - 4, barHeight - 4);
-    healthBitmap.ctx.beginPath();
-    healthBitmap.ctx.rect(0, 0, healthBitmap.width, healthBitmap.height);
-    healthBitmap.ctx.fillStyle = '#F44336';
-    healthBitmap.ctx.fill();
- 
-    // create the health Sprite using the red rectangle bitmap data
-    this.hpBar = game.add.sprite(barLocationX + 2, barLocationY + 2, healthBitmap);
-    this.hpBar.widthMax = barWidth + 2;
-    meters.add(this.hpBar);
-  }
-
-  updateHpBar(){
-      let healthPercent = (game.player.hp/game.player.hpMax);
-      console.log(healthPercent);
-      console.log(this.hpBar.widthMax * healthPercent);
-      
-      setInterval( () => {
-        this.hpBar.width = this.hpBar.widthMax * healthPercent;
-    }, 500);
-  }
-  
-
   floatingCombatText(damage, obj){
         var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
         var damageText = this.add.text(obj.sprite.x, obj.sprite.y + 6, Math.abs(damage), {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
@@ -177,14 +140,15 @@ export default class extends Phaser.State {
       }
     });
 
-    game.playerHp.setText( (game.player.hp > 0 ? game.player.hp.toFixed(): 0) + "/" + game.player.hpMax);      
-    this.mobHp.setText( (this.mob.hp > 0 ? this.mob.hp.toFixed() : 0) + "/" + this.mob.hpMax);
+    game.playerHp.setText( Phaser.Math.clampBottom(0, game.player.hp.toFixed()) + "/" + game.player.hpMax);      
+    this.mobHp.setText( Phaser.Math.clampBottom(0,this.mob.hp.toFixed()) + "/" + this.mob.hpMax);
 
     if(game.player.isAlive() && this.mob.isAlive()){
         if(!this.isPlayersTurn && this.mob.isAlive()) {  
           let damage = this.mob.calculateAttack();  
         setTimeout(() => {
           this.floatingCombatText(damage, game.player);
+          this.healthBar.updateHpBar(damage);
           game.player.recieveDamage(damage).onComplete.add(()=> {
                     this.buttonList.forEach((item)=> {item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
         }, randomInt(200));
@@ -198,12 +162,10 @@ export default class extends Phaser.State {
         game.player.animationDeath();
       }
       if(!this.mob.isAlive()){
-        this.mob.animationDeath();
-        
+        this.mob.animationDeath();       
       }
       this.banner.visible = true;
     }
-    this.updateHpBar();
 
     //this.mushroom.x = game.player.sprite.x;
     if (__DEV__) {
