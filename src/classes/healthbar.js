@@ -4,7 +4,11 @@ import { randomInt } from '../utils';
 
 export default class HealthBar {
 
-	constructor() {	}
+	constructor(character, locX, locY, opposite = false) {
+		this.character = character;
+		this.opposite = opposite;
+		this.createHealthBar(locX, locY);
+	}
 
 	createHealthBar(barLocationX, barLocationY){
 		// let barLocationX = 93;
@@ -31,12 +35,15 @@ export default class HealthBar {
 	 
 		// create the health Sprite using the red rectangle bitmap data
 		this.hpBar = game.add.sprite(barLocationX + 2, barLocationY + 2, healthBitmap);
+		if(this.opposite){
+			this.hpBar.scale.x *= -1;
+		}
 		this.hpBar.widthMax = barWidth;
 		meters.add(this.hpBar);
-	  }
+	}
 
-	updatePlayerHpBar(damage){	
-		let healthPercent = this.hpBar.widthMax * (Phaser.Math.percent(game.player.hp - damage,game.player.hpMax));
+	updateHpBar(damage){	
+		let healthPercent = this.hpBar.widthMax * (Phaser.Math.percent(this.character.hp - damage, this.character.hpMax));
 		game.add.tween(this.hpBar).to({'width':  Phaser.Math.clampBottom(0, healthPercent)}, 500, "Quart.easeOut",true, 0, 0, 0);    
 	}
 

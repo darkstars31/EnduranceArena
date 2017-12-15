@@ -55,8 +55,8 @@ export default class extends Phaser.State {
       asset: 'mushroom'
     })
 
-    this.healthBar = new HealthBar();
-    this.healthBar.createHealthBar(93,26);
+    this.playerHealthBar = new HealthBar(game.player, 93,26);
+    this.monsterHealthBar = new HealthBar(this.mob, 424, 26, true);
     this.game.add.existing(this.mushroom)
   }
 
@@ -84,6 +84,7 @@ export default class extends Phaser.State {
     let damage = game.player.calculateAttack();
     this.floatingCombatText(damage, this.mob);
     console.log('Attack: ' + damage);
+    this.monsterHealthBar.updateHpBar(damage);
     this.mob.recieveDamage(damage).onComplete.add(()=> this.isPlayersTurn = false);
   }
 
@@ -148,7 +149,7 @@ export default class extends Phaser.State {
           let damage = this.mob.calculateAttack();  
         setTimeout(() => {
           this.floatingCombatText(damage, game.player);
-          this.healthBar.updatePlayerHpBar(damage);
+          this.playerHealthBar.updateHpBar(damage);
           game.player.recieveDamage(damage).onComplete.add(()=> {
                     this.buttonList.forEach((item)=> {item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
         }, randomInt(200));
