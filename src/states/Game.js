@@ -56,7 +56,7 @@ export default class extends Phaser.State {
     })
 
     this.playerHealthBar = new HealthBar(game.player, 93,26);
-    this.monsterHealthBar = new HealthBar(this.mob, 424, 26, true);
+    this.monsterHealthBar = new HealthBar(this.mob, this.world.width - 93, 26, true);
     this.game.add.existing(this.mushroom)
   }
 

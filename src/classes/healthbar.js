@@ -36,7 +36,8 @@ export default class HealthBar {
 		// create the health Sprite using the red rectangle bitmap data
 		this.hpBar = game.add.sprite(barLocationX + 2, barLocationY + 2, healthBitmap);
 		if(this.opposite){
-			this.hpBar.scale.x *= -1;
+			healthMeterBG.anchor.setTo(1,0);
+			this.hpBar.anchor.setTo(1,0);
 		}
 		this.hpBar.widthMax = barWidth;
 		meters.add(this.hpBar);
