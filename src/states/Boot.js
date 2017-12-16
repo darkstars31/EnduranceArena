@@ -69,7 +69,6 @@ export default class extends Phaser.State {
 
   create () {
    
-    
     this.game.player = new Player();
     game.player.statPoints = 40;
 

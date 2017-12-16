@@ -13,13 +13,13 @@ export default class extends Phaser.State {
         banner.padding.set(10, 16)
         banner.anchor.setTo(0.5)
 
-        let level = this.add.text(this.world.width / 2, this.game.height / 12, "Level "+ game.player.level, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
+        let level = this.add.text(this.world.width / 3, this.game.height / 12, "Level "+ game.player.level, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
         level.padding.set(10, 16)
 
-        let money = this.add.text(this.world.width / 2 + 80, this.game.height / 12, "Money "+ game.player.shmeckles, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
+        let money = this.add.text(this.world.width / 3 + 100, this.game.height / 12, "Zeny "+ game.player.zeny, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
         money.padding.set(10, 16)
 
-        let statPoints = this.add.text(this.world.width / 2 + 160, this.game.height / 12, "Stat Points "+ game.player.statPoints, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
+        let statPoints = this.add.text(this.world.width / 2 + 200, this.game.height / 12, "Stat Points "+ game.player.statPoints, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
         statPoints.padding.set(10, 16)
 
         let menuItems = [{ label: 'Back', location: {x: this.world.centerX - 50, y:this.game.height - 60 }, inputEnabled: true, gameObject: null},

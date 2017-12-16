@@ -1,21 +1,25 @@
 import Phaser from 'phaser'
 import { randomInt } from '../utils';
+import FloatingCombatText from './floatingCombatText'
 
 export default class Character {
 
   constructor (obj) {
-	this.level = 1;
-	this.shmeckles = 0;
-	
-	this.statPoints = 0;
-	this.baseAttack = 5;
+	this.floatingCombatText = new FloatingCombatText();  
+	this.name 			= obj ? obj.name : '';
+	this.level 			= obj ? obj.level : 1;
+	this.zeny 			= obj ? obj.zeny : 0;
+	this.statPoints 	= obj ? obj.statPoints : 0;
+	this.baseAttack 	= obj ? obj.baseAttack : 5;
 
-	this.strength = 1;
-	this.agility = 1;
-	this.dexterity = 1;
-	this.vitality = 1;
-	this.intelligence = 1;
-	this.luck = 1;
+	this.strength 		= obj ? obj.stats.strength : 1;
+	this.agility 		= obj ? obj.stats.agility : 1;
+	this.dexterity 		= obj ? obj.stats.dexterity : 1;
+	this.vitality 		= obj ? obj.stats.vitality : 1;
+	this.intelligence 	= obj ? obj.stats.intelligence : 1;
+	this.luck 			= obj ? obj.stats.luck : 1;
+
+	this.inventory = [];
 
 	this.hp = 0;
 	this.hpMax = this.calculateMaxHp();
@@ -27,16 +31,17 @@ export default class Character {
 
 	recieveDamage(damage) {
 		this.animationHurt();
+		this.floatingCombatText.displayDamage(damage, this);
 		return game.add.tween(this).to({hp: this.hp - damage}, 500, Phaser.Easing.Sinusoidal.Out, true);
 	}
 
 	recieveHealing(healing) {
-		// if(this.hp + healing > this.hpMax ){ healing = this.hpMax - this.hp; }
+		this.floatingCombatText.displayHealing(healing, this);
 		return game.add.tween(this).to({hp: Phaser.Math.clamp(this.hp + healing, 0, this.hpMax)}, 500, Phaser.Easing.Sinusoidal.Out, true);		
 	}
 
 	calculateMaxHp () {
-		return Math.floor(this.vitality * 20 + this.level * 3 + 35);
+		return Math.floor(this.vitality * 12 + this.level * 3 + 35);
 	}
 
 	calculateAttackLowAndHigh() {
@@ -50,7 +55,7 @@ export default class Character {
     if(randomInt(0,100) < this.calculateCriticalChance()){
       criticalDamage = this.baseAttack + strengthBasedAttackBonus;
     }
-    return randomInt(this.strength/2, strengthBasedAttackBonus) + this.baseAttack + criticalDamage; 
+    return randomInt(this.strength/2, strengthBasedAttackBonus) + this.baseAttack + this.level + criticalDamage; 
 	}
 
 	calculateEvasionChance() {

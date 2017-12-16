@@ -14,27 +14,28 @@ export default class extends Phaser.State {
     let background = this.add.sprite(0,0, 'battleBackground1');
     background.scale.setTo(.7,.7);
     this.cloudGeneration();
-    this.floatingCombatTextGroup = this.add.group();
 
     this.audioItems = [];
     this.audioItems.push(this.add.audio('audioHit1'));
     this.audioItems.push(this.add.audio('audioHit2'));
     this.audioItems.push(this.add.audio('audioHit3'));
     
+    this.stageMenu = [];
+    this.stageMenu.push(this.add.text(this.world.centerX, this.game.height / 6, "Stage Complete", {font: 'Bangers', fontSize: 60, fill: '#77BFA3', smoothed: false}));
+    this.stageMenu.push(this.add.text(this.world.centerX + 120, this.game.height / 3, "Continue", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false}));
+    this.stageMenu.push(this.add.text(this.world.centerX - 100, this.game.height / 3, "Item Shop", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false}));
+    this.stageMenu.push(this.add.text(this.world.centerX, this.game.height / 3, "Return to Main Menu", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false}));
 
-    this.bannerText = 'Stage Complete';
-    this.banner = this.add.text(this.world.centerX, this.game.height / 6, this.bannerText, {font: 'Bangers', fontSize: 60, fill: '#77BFA3', smoothed: false});
-    this.banner.padding.set(10, 16);
-    this.banner.anchor.setTo(0.5);
-    this.banner.visible = false;
-
-
-    let monster1 = this.cache.getJSON('MonsterData');
-    console.log(monster1[0]);
-    this.mob = new Monster(monster1);
-    this.mob.hp = this.mob.hpMax;
+    this.stageMenu.forEach(item => {
+      item.inputEnabled = true;
+      item.events.onInputUp.add(()=>{this.onMenuItemClick(item)});   
+      item.anchor.setTo(0.5);
+      item.visible = false;
+    });
    
-    
+    let monsterData = this.cache.getJSON('MonsterData');
+    this.mob = new Monster(monsterData[game.player.currentStage]);
+    this.mob.hp = this.mob.hpMax;
     game.player.animationSetup();
     game.player.hp = this.game.player.hpMax;
     
@@ -62,10 +63,12 @@ export default class extends Phaser.State {
 
   initUserInterface () {
     game.playerHp = this.add.text(60, this.game.height / 12, game.player.hp + "/" + game.player.hpMax, {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
-    game.playerHp.anchor.setTo(0.5)
+    game.playerHp.anchor.setTo(0.5);
+    game.playerHp.scale.setTo(1,.8);
 
     this.mobHp = this.add.text( this.game.width - 60, this.game.height / 12, this.mob.hp + "/" + this.mob.hpMax, {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
     this.mobHp.anchor.setTo(0.5)
+    this.mobHp.scale.setTo(1,.8);
 
     let uiButtonSpacing = 0;
     this.uiButtonsItems.forEach((item) => {
@@ -77,12 +80,27 @@ export default class extends Phaser.State {
     });       
   }
 
+  onMenuItemClick(item) {
+    switch(item._text){
+      case 'Continue':
+            game.player.currentStage += 1;
+            game.state.start('Game');
+            break;
+      case 'Item Shop':
+            break;
+      case 'Return to Main Menu':
+            game.state.start('MainMenu');
+            break;
+      default: console.log(item);
+            break;
+    }
+  }
+
   onAttackClick() {
     this.disableButtons();                  
     this.attackAudio = this.audioItems[this.rnd.integerInRange(0,this.audioItems.length - 1)];
     this.attackAudio.play();
     let damage = game.player.calculateAttack();
-    this.floatingCombatText(damage, this.mob);
     console.log('Attack: ' + damage);
     this.monsterHealthBar.updateHpBar(damage);
     this.mob.recieveDamage(damage).onComplete.add(()=> this.isPlayersTurn = false);
@@ -95,30 +113,11 @@ export default class extends Phaser.State {
 
   onHealthPotClick() {
     this.disableButtons();                  
-    game.player.recieveHealing( game.player.hpMax/5 ).onComplete.add(()=> this.isPlayersTurn = false);
+    game.player.recieveHealing( 15 ).onComplete.add(()=> this.isPlayersTurn = false);
   }
 
   disableButtons() {
     this.buttonList.forEach((item)=> {item.inputEnabled = false; item.tint = '0x616161'});                      
-  }
-
-  floatingCombatText(damage, obj){
-        var background = game.add.sprite(obj.sprite.x, obj.sprite.y, 'damageAtlas','damageBackground'); 
-        var damageText = this.add.text(obj.sprite.x + 1, obj.sprite.y + 10, Math.abs(damage), {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
-        
-        background.scale.setTo(.6,.6);
-        background.anchor.setTo(.5);
-        damageText.scale.setTo(.7,.7);
-        damageText.anchor.setTo(.5);
-        this.add.tween(background).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
-        this.add.tween(damageText).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
-        this.add.tween(background.scale).to({ x: 1, y: 1}, 2000, "Quart.easeOut",true, 0, 0, 0);
-        this.add.tween(damageText.scale).to({ x: 1.2, y: 1.2}, 2000, "Quart.easeOut",true, 0, 0, 0);
-        this.add.tween(background).to({ alpha: 0}, 2700, "Quart.easeOut",true, 300, 0, 0);
-        this.add.tween(damageText).to({ alpha: 0}, 2700, "Quart.easeOut",true, 300, 0, 0);
-
-        this.floatingCombatTextGroup.add(background);
-        this.floatingCombatTextGroup.add(damageText);
   }
 
   cloudGeneration() {
@@ -127,6 +126,7 @@ export default class extends Phaser.State {
     for(let i = 0;i < numClouds; i++){
       let cloud = this.add.sprite(this.rnd.integerInRange(-400,-160),this.rnd.integerInRange(8,60), 'cloud1');
       let cloudScale = this.rnd.integerInRange(2,5) / 12;
+      cloud.alpha = this.rnd.integerInRange(2,6) / 10;
       cloud.scale.setTo(cloudScale,cloudScale);
       cloud.speed = cloudScale;
       this.clouds.push(cloud);
@@ -148,7 +148,6 @@ export default class extends Phaser.State {
         if(!this.isPlayersTurn && this.mob.isAlive()) {  
           let damage = this.mob.calculateAttack();  
         setTimeout(() => {
-          this.floatingCombatText(damage, game.player);
           this.playerHealthBar.updateHpBar(damage);
           game.player.recieveDamage(damage).onComplete.add(()=> {
                     this.buttonList.forEach((item)=> {item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
@@ -156,16 +155,19 @@ export default class extends Phaser.State {
        
       }
     } else {
+      this.stageMenu[0].visible = 1;
       this.buttonList.forEach((item)=> item.inputEnabled = false);    
       if(!game.player.isAlive()) {
-        this.banner.fill = 'red';
-        this.banner.text = "YOU DIED";
+        this.stageMenu[0].fill = 'red';
+        this.stageMenu[0].text = "YOU DIED";
+        this.stageMenu[3].visible = 1;
         game.player.animationDeath();
       }
       if(!this.mob.isAlive()){
+        this.stageMenu[1].visible = 1;
+        this.stageMenu[2].visible = 1;
         this.mob.animationDeath();       
       }
-      this.banner.visible = true;
     }
 
     //this.mushroom.x = game.player.sprite.x;

@@ -4,8 +4,9 @@ import { randomInt } from '../utils';
 
 export default class Player extends character {
 
-  constructor (...args) {
+  constructor (args) {
     super(args);
+    this.currentStage = 0;
   }
 
   animationSetup() {
