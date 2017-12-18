@@ -44,7 +44,7 @@ export default class HealthBar {
 	}
 
 	updateHpBar(damage){	
-		let healthPercent = this.hpBar.widthMax * (Phaser.Math.percent(this.character.hp - damage, this.character.hpMax));
+		let healthPercent = this.hpBar.widthMax * (Phaser.Math.percent(this.character.hp - damage, this.character.calculateMaxHp()));
 		game.add.tween(this.hpBar).to({'width':  Phaser.Math.clampBottom(0, healthPercent)}, 500, "Quart.easeOut",true, 0, 0, 0);    
 	}
 

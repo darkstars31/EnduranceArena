@@ -37,7 +37,7 @@ export default class extends Phaser.State {
     this.mob = new Monster(monsterData[game.player.currentStage]);
     this.mob.hp = this.mob.hpMax;
     game.player.animationSetup();
-    game.player.hp = this.game.player.hpMax;
+    game.player.hp = game.player.calculateMaxHp();
     
     this.buttonList = [];
     this.uiButtonsItems = [
@@ -63,11 +63,11 @@ export default class extends Phaser.State {
   }
 
   initUserInterface () {
-    game.playerHp = this.add.text(60, this.game.height / 12, game.player.hp + "/" + game.player.hpMax, {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
+    game.playerHp = this.add.text(60, this.game.height / 12, game.player.hp + "/" + game.player.calculateMaxHp(), {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
     game.playerHp.anchor.setTo(0.5);
     game.playerHp.scale.setTo(1,.8);
 
-    this.mobHp = this.add.text( this.game.width - 60, this.game.height / 12, this.mob.hp + "/" + this.mob.hpMax, {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
+    this.mobHp = this.add.text( this.game.width - 60, this.game.height / 12, this.mob.hp + "/" + this.mob.calculateMaxHp(), {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
     this.mobHp.anchor.setTo(0.5)
     this.mobHp.scale.setTo(1,.8);
 
@@ -153,8 +153,8 @@ export default class extends Phaser.State {
       }
     });
 
-    game.playerHp.setText( Phaser.Math.clampBottom(0, game.player.hp.toFixed()) + "/" + game.player.hpMax);      
-    this.mobHp.setText( Phaser.Math.clampBottom(0,this.mob.hp.toFixed()) + "/" + this.mob.hpMax);
+    game.playerHp.setText( Phaser.Math.clampBottom(0, game.player.hp.toFixed()) + "/" + game.player.calculateMaxHp());      
+    this.mobHp.setText( Phaser.Math.clampBottom(0,this.mob.hp.toFixed()) + "/" + this.mob.calculateMaxHp());
 
     if(game.player.isAlive() && this.mob.isAlive()){
         if(!this.isPlayersTurn && this.isMonstersTurn && this.mob.isAlive()) {
@@ -163,8 +163,8 @@ export default class extends Phaser.State {
         setTimeout(() => {
           this.playerHealthBar.updateHpBar(damage);
           game.player.recieveDamage(damage).onComplete.add(()=> {
-                    this.buttonList.forEach((item)=> { game.player.blocking = false; item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
-        }, randomInt(200));
+                    this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
+        }, 750);
        
       }
     } else {

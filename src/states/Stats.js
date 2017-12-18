@@ -19,8 +19,8 @@ export default class extends Phaser.State {
         let money = this.add.text(this.world.width / 3 + 100, this.game.height / 12, "Zeny "+ game.player.zeny, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
         money.padding.set(10, 16)
 
-        let statPoints = this.add.text(this.world.width / 2 + 200, this.game.height / 12, "Stat Points "+ game.player.statPoints, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
-        statPoints.padding.set(10, 16)
+        this.statPoints = this.add.text(this.world.width / 2 + 200, this.game.height / 12, "Stat Points "+ game.player.statPoints, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
+        this.statPoints.padding.set(10, 16)
 
         let menuItems = [{ label: 'Back', location: {x: this.world.centerX - 50, y:this.game.height - 60 }, inputEnabled: true, gameObject: null},
                          { label: 'Next', location: {x: this.world.centerX + 50, y:this.game.height - 60 }, inputEnabled: true, gameObject: null},
@@ -40,37 +40,34 @@ export default class extends Phaser.State {
     }
 
     showStats(player) {
-        let stats = [   { key: 'Strength', value: player.strength},
-                        { key: 'Agility', value: player.agility},
-                        { key: 'Dexterity', value: player.dexterity},
-                        { key: 'Vitality', value: player.vitality},
-                        //{ key: 'Intellect', value: player.intelligence},
-                        { key: 'Luck', value: player.luck}];
+        let stats = [   { key: 'Strength', secondaryKey:'Damage',   secondaryStat: 'calculateAttackLowAndHigh'},
+                        { key: 'Agility', secondaryKey:'Evasion',   secondaryStat: 'calculateEvasionChance'},
+                        { key: 'Dexterity', secondaryKey:'Accuracy', secondaryStat: 'calculateAccuracy'},
+                        { key: 'Vitality', secondaryKey:'Max HP',   secondaryStat: 'calculateMaxHp'},
+                        //{ key: 'Intellect'},
+                        { key: 'Luck', secondaryKey:'Critical', secondaryStat: 'calculateCriticalChance'}];
         var spacing = 0;
         stats.forEach(statItem => {
-            let item = this.add.text(this.world.width / 3 - 160, this.game.height/4 + spacing, statItem.key +": "+ statItem.value, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
-            let statPlusIcon = this.add.button(this.world.width / 3 - 190,this.game.height/4 + spacing, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item)}, this);
+            let item = this.add.text(this.world.width / 3 - 160, this.game.height/4 + spacing, statItem.key +": "+ game.player[statItem.key.toLowerCase()], {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
+            let secondaryStatItem = this.add.text(this.world.width / 3 - 20, this.game.height/4 + spacing, statItem.secondaryKey +": "+  game.player[statItem.secondaryStat](), {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
+            let statPlusIcon = this.add.button(this.world.width / 3 - 190,this.game.height/4 + spacing, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item, secondaryStatItem, this)}, this);
             statPlusIcon.scale.setTo(.1,.1);
-            spacing += 32;
-        });
-
-        let stats2 = [  { key: 'Damage', value: player.calculateAttackLowAndHigh()[0] +"-"+ player.calculateAttackLowAndHigh()[1]},
-                        { key: 'Evasion', value: player.calculateEvasionChance() +"%"},
-                        { key: 'Accuracy', value: player.calculateAccuracy()},
-                        { key: 'Max HP', value: player.calculateMaxHp()},
-                        //{ key: 'Max MP', value: player.intelligence},
-                        { key: 'Critical', value: player.calculateCriticalChance() + "%"}];
-        spacing = 0;
-        stats2.forEach(statItem => {
-            let item = this.add.text(this.world.width / 3 - 20, this.game.height/4 + spacing, statItem.key +": "+ statItem.value, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
             spacing += 32;
         });
     }
 
-    spendStatPoint(obj, item) {
-        console.log(item);
-        game.player.spendStatPoint(obj);
-        item.setText(obj.key +": "+ obj.value);
+    spendStatPoint(obj, item, item2, statPlusIcon) {
+        if(game.player.statPoints > 2){
+            game.player.spendStatPoint(obj);
+            item.setText(obj.key +": "+ game.player[obj.key.toLowerCase()]);
+            let value = game.player[obj.secondaryStat]();
+            item2.setText(obj.secondaryKey+": " + value);
+            this.statPoints.setText("Stat Points "+ game.player.statPoints);
+        } else {
+            console.log(statPlusIcon);
+            statPlusIcon.destroy();
+        }
+ 
     }
 
     addInputs(item) {

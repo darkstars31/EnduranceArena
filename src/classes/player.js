@@ -12,10 +12,9 @@ export default class Player extends character {
   }
 
   spendStatPoint(statPointObj) {
-    console.log(statPointObj);
-    console.log(this);
-    this[statPointObj.key.toLowerCase()] += 1;
-    this.statPoints -= Math.floor([(statPointObj.value - 1)/10]) + 1;
+    let stat = statPointObj.key.toLowerCase()
+    this[stat] += 1;
+    this.statPoints -= Math.floor([(this[stat] - 1)/10]) + 1;
   }
 
   animationSetup() {

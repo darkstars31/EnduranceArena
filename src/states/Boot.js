@@ -74,7 +74,7 @@ export default class extends Phaser.State {
    
     this.game.player = new Player();
     game.player.statPoints = 40;
-
+    
     var music = this.add.audio('battleStage').play();
     music.volume = .2;
 

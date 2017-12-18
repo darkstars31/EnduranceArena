@@ -34,6 +34,7 @@ export default class Character {
 	recieveDamage(damage) {
 		if(this.blocking){
 			damage = Math.floor(Phaser.Math.clampBottom(1, damage / 2));
+			this.blocking = false;
 		}
 		this.animationHurt();
 		this.floatingCombatText.displayDamage(damage, this);
@@ -50,17 +51,16 @@ export default class Character {
 	}
 
 	calculateAttackLowAndHigh() {
-		return [ Math.ceil(this.strength/2) + this.baseAttack, this.strength*2 + this.baseAttack];
+		return [ Math.ceil((this.strength*1.5)/2) + this.baseAttack, this.strength*2 + this.baseAttack];
 	}
 
-	calculateAttack() {
-    
-    let strengthBasedAttackBonus = this.strength * 2;
-    let criticalDamage = 0;
-    if(randomInt(0,100) < this.calculateCriticalChance()){
-      criticalDamage = this.baseAttack + strengthBasedAttackBonus;
-    }
-    return randomInt(this.strength/2, strengthBasedAttackBonus) + this.baseAttack + this.level + criticalDamage; 
+	calculateAttack() {    
+		let strengthBasedAttackBonus = this.strength * 2;
+		let criticalDamage = 0;
+		if(randomInt(0,100) < this.calculateCriticalChance()){
+		criticalDamage = this.baseAttack + strengthBasedAttackBonus;
+		}
+		return randomInt((this.strength*1.5)/2, strengthBasedAttackBonus) + this.baseAttack + this.level + criticalDamage; 
 	}
 
 	calculateEvasionChance() {
@@ -72,7 +72,7 @@ export default class Character {
 	}
 	
 	calculateCriticalChance() {
-    return Math.ceil(this.luck * 0.3);
+    return Math.ceil(this.luck - Math.floor(this.luck * .2));
   }
 
   calculateHp () {
