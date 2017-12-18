@@ -163,10 +163,13 @@
     {
         "name": "Poring",
         "level": 9,
+        "baseAttack": 15,
         "colorTint": "0x6afafc",
         "stats": {
+            "strength" : 16,
             "agility" : 1,
             "dexterity" : 1,
+            "vitality" : 16,
             "intelligence" : 1,
             "luck" : 8
         },

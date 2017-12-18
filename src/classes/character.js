@@ -60,7 +60,7 @@ export default class Character {
 		if(randomInt(0,100) < this.calculateCriticalChance()){
 		criticalDamage = this.baseAttack + strengthBasedAttackBonus;
 		}
-		return randomInt((this.strength*1.5)/2, strengthBasedAttackBonus) + this.baseAttack + this.level + criticalDamage; 
+		return randomInt((this.strength*1.8)/2, strengthBasedAttackBonus) + this.baseAttack + this.level + criticalDamage; 
 	}
 
 	calculateEvasionChance() {
