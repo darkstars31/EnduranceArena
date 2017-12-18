@@ -43,7 +43,7 @@ export default class Character {
 
 	recieveHealing(healing) {
 		this.floatingCombatText.displayHealing(healing, this);
-		return game.add.tween(this).to({hp: Phaser.Math.clamp(this.hp + healing, 0, this.hpMax)}, 500, Phaser.Easing.Sinusoidal.Out, true);		
+		return game.add.tween(this).to({hp: Phaser.Math.clamp(this.hp + healing, 0, this.calculateMaxHp())}, 500, Phaser.Easing.Sinusoidal.Out, true);		
 	}
 
 	calculateMaxHp () {

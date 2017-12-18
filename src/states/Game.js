@@ -37,7 +37,7 @@ export default class extends Phaser.State {
     this.mob = new Monster(monsterData[game.player.currentStage]);
     this.mob.hp = this.mob.hpMax;
     game.player.animationSetup();
-    game.player.hp = game.player.calculateMaxHp();
+    //game.player.hp = game.player.calculateMaxHp();
     
     this.buttonList = [];
     this.uiButtonsItems = [
@@ -121,8 +121,7 @@ export default class extends Phaser.State {
         this.disableButtons();
         game.player.healthPotions -= 1;
         this.healthPotionCount.setText(game.player.healthPotions);
-        game.player.recieveHealing( 40 ).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
-
+        game.player.recieveHealing( 40 + game.player.vitality * 2 ).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
     } else {
 
     } 

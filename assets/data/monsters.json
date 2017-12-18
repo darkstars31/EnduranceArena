@@ -26,7 +26,7 @@
         "baseAttack": 3,
         "colorTint": "0xFFFFFF",
         "stats": {
-            "strength" : 1,
+            "strength" : 2,
             "agility" : 1,
             "dexterity" : 1,
             "vitality" : 2,
@@ -46,7 +46,7 @@
         "baseAttack": 4,
         "colorTint": "0x1F1F1F",
         "stats": {
-            "strength" : 2,
+            "strength" : 3,
             "agility" : 1,
             "dexterity" : 1,
             "vitality" : 2,
@@ -63,10 +63,10 @@
     {
         "name": "Poring",
         "level": 4,
-        "baseAttack": 4,
+        "baseAttack": 6,
         "colorTint": "0x8cb8ff",
         "stats": {
-            "strength" : 2,
+            "strength" : 3,
             "agility" : 1,
             "dexterity" : 1,
             "vitality" : 3,
@@ -83,7 +83,7 @@
     {
         "name": "Poring",
         "level": 5,
-        "baseAttack": 1,
+        "baseAttack": 3,
         "colorTint": "0xff8c8c",
         "stats": {
             "strength" : 4,
@@ -91,7 +91,7 @@
             "dexterity" : 1,
             "vitality" : 3,
             "intelligence" : 1,
-            "luck" : 15
+            "luck" : 50
         },
         "animations": {
             "attack": "poringAttack",

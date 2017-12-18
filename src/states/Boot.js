@@ -24,8 +24,8 @@ export default class extends Phaser.State {
     this.load.image('loaderBg', './assets/images/loader-bg.png')
     this.load.image('loaderBar', './assets/images/loader-bar.png')
     // Data Files
-    this.load.json('MonsterData', './src/data/monsters.json')
-    this.load.json('ItemData', './src/data/items.json')
+    this.load.json('MonsterData', './assets/data/monsters.json')
+    this.load.json('ItemData', './assets/data/items.json')
 
     // Misc
     this.load.image('menuCursor', './assets/images/ui/menuCursor.png')
@@ -75,6 +75,7 @@ export default class extends Phaser.State {
    
     this.game.player = new Player();
     game.player.statPoints = 40;
+   
     
     var music = this.add.audio('battleStage').play();
     music.volume = .2;
