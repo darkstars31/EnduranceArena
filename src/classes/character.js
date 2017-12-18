@@ -51,7 +51,7 @@ export default class Character {
 	}
 
 	calculateAttackLowAndHigh() {
-		return [ Math.ceil((this.strength*1.5)/2) + this.baseAttack, this.strength*2 + this.baseAttack];
+		return [ Math.ceil((this.strength*1.8)/2) + this.baseAttack, this.strength*2 + this.baseAttack];
 	}
 
 	calculateAttack() {    
