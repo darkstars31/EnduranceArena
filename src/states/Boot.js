@@ -4,6 +4,7 @@ import Player from '../classes/player';
 
 export default class extends Phaser.State {
   init () {
+    Object.freeze(Math);
     this.stage.backgroundColor = '#EDEEC9'
     this.fontsReady = false
     this.fontsLoaded = this.fontsLoaded.bind(this)
