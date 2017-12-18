@@ -79,6 +79,10 @@ export default class Character {
       this.hp = this.hp.toFixed();
   }
 
+  useItem () {
+	
+  }
+
 
 
 }

@@ -79,6 +79,9 @@ export default class extends Phaser.State {
       uiButtonSpacing += 60;
       this.buttonList.push(button);
     });       
+
+    this.healthPotionCount = this.add.text(192, this.game.height - 36, game.player.healthPotions, {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
+
   }
 
   onMenuItemClick(item) {
@@ -114,8 +117,15 @@ export default class extends Phaser.State {
   }
 
   onHealthPotClick() {
-    this.disableButtons();                  
-    game.player.recieveHealing( 15 ).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
+    if(game.player.healthPotions > 0){
+        this.disableButtons();
+        game.player.healthPotions -= 1;
+        this.healthPotionCount.setText(game.player.healthPotions);
+        game.player.recieveHealing( 40 ).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
+
+    } else {
+
+    } 
   }
 
   disableButtons() {

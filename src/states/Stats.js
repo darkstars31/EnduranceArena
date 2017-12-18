@@ -44,11 +44,13 @@ export default class extends Phaser.State {
                         { key: 'Agility', value: player.agility},
                         { key: 'Dexterity', value: player.dexterity},
                         { key: 'Vitality', value: player.vitality},
-                        { key: 'Intellect', value: player.intelligence},
+                        //{ key: 'Intellect', value: player.intelligence},
                         { key: 'Luck', value: player.luck}];
         var spacing = 0;
         stats.forEach(statItem => {
             let item = this.add.text(this.world.width / 3 - 160, this.game.height/4 + spacing, statItem.key +": "+ statItem.value, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
+            let statPlusIcon = this.add.button(this.world.width / 3 - 190,this.game.height/4 + spacing, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item)}, this);
+            statPlusIcon.scale.setTo(.1,.1);
             spacing += 32;
         });
 
@@ -56,13 +58,19 @@ export default class extends Phaser.State {
                         { key: 'Evasion', value: player.calculateEvasionChance() +"%"},
                         { key: 'Accuracy', value: player.calculateAccuracy()},
                         { key: 'Max HP', value: player.calculateMaxHp()},
-                        { key: 'Max MP', value: player.intelligence},
+                        //{ key: 'Max MP', value: player.intelligence},
                         { key: 'Critical', value: player.calculateCriticalChance() + "%"}];
         spacing = 0;
         stats2.forEach(statItem => {
             let item = this.add.text(this.world.width / 3 - 20, this.game.height/4 + spacing, statItem.key +": "+ statItem.value, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
             spacing += 32;
         });
+    }
+
+    spendStatPoint(obj, item) {
+        console.log(item);
+        game.player.spendStatPoint(obj);
+        item.setText(obj.key +": "+ obj.value);
     }
 
     addInputs(item) {
@@ -97,5 +105,7 @@ export default class extends Phaser.State {
         }
       }
 
-    render () {}
+    render () {
+        
+    }
 }

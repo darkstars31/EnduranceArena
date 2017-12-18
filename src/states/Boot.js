@@ -38,6 +38,8 @@ export default class extends Phaser.State {
     this.load.image('musicOn', './assets/images/ui/musicOn.png')
     this.load.image('musicOff', './assets/images/ui/musicOff.png')
     this.load.image('arrowUpKey', './assets/images/ui/arrowUpKey.png')
+    this.load.image('statPlusIcon', './assets/images/ui/plusIcon.png')
+
 
     // Background + Environment
     this.load.image('battleBackground1', './assets/images/battlebackgrounds/battleback1.png')

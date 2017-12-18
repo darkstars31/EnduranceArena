@@ -7,6 +7,15 @@ export default class Player extends character {
   constructor (args) {
     super(args);
     this.currentStage = 0;
+
+    this.healthPotions = 3;
+  }
+
+  spendStatPoint(statPointObj) {
+    console.log(statPointObj);
+    console.log(this);
+    this[statPointObj.key.toLowerCase()] += 1;
+    this.statPoints -= Math.floor([(statPointObj.value - 1)/10]) + 1;
   }
 
   animationSetup() {
@@ -21,8 +30,7 @@ export default class Player extends character {
     this.spriteHead = game.add.sprite(- 100, game.world.height / 2 - 40, 'noviceHead');
     this.spriteHead.anchor.setTo(.5);
     this.spriteHead.scale.x = -1;
-    game.add.tween(this.spriteHead).to({x: game.world.width / 3}, 2400, 'Linear',true);
-    
+    game.add.tween(this.spriteHead).to({x: game.world.width / 3}, 2400, 'Linear',true); 
 
   }
 
