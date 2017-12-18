@@ -12,6 +12,12 @@
             "vitality" : 1,
             "intelligence" : 1,
             "luck" : 1
+        },
+        "animations": {
+            "attack": "poringAttack",
+            "idle": "poringIdle",
+            "death:":"poringDeath",
+            "damaged": "poringDamaged"
         }
     },
     {
@@ -26,13 +32,19 @@
             "vitality" : 2,
             "intelligence" : 1,
             "luck" : 1
+        },
+        "animations": {
+            "attack": "poringAttack",
+            "idle": "poringIdle",
+            "death:":"poringDeath",
+            "damaged": "poringDamaged"
         }
     },
     {
         "name": "Black Poring",
         "level": 3,
         "baseAttack": 3,
-        "colorTint": "0x2a262d",
+        "colorTint": "",
         "stats": {
             "strength" : 90,
             "agility" : 1,
@@ -40,6 +52,12 @@
             "vitality" : 4,
             "intelligence" : 1,
             "luck" : 1
+        },
+        "animations": {
+            "attack": "poringAttack",
+            "idle": "poringIdle",
+            "death:":"poringDeath",
+            "damaged": "poringDamaged"
         }
     }
 ]

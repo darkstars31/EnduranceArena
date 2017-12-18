@@ -55,9 +55,11 @@ export default class extends Phaser.State {
     this.add.audio('audioMenuSelect').play();
     switch(item.text){
         case 'New Game':
+            game.player.currentStage = 0;
             this.state.start('Game'); 
             break;
         case 'Continue':
+            this.state.start('Game'); 
             break;
         case 'Stats':
             this.state.start('Stats'); 

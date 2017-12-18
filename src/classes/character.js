@@ -20,6 +20,8 @@ export default class Character {
 	this.luck 			= obj ? obj.stats.luck : 1;
 
 	this.inventory = [];
+	
+	this.blocking = false;
 
 	this.hp = 0;
 	this.hpMax = this.calculateMaxHp();
@@ -30,6 +32,9 @@ export default class Character {
 	}
 
 	recieveDamage(damage) {
+		if(this.blocking){
+			damage = Math.floor(Phaser.Math.clampBottom(1, damage / 2));
+		}
 		this.animationHurt();
 		this.floatingCombatText.displayDamage(damage, this);
 		return game.add.tween(this).to({hp: this.hp - damage}, 500, Phaser.Easing.Sinusoidal.Out, true);

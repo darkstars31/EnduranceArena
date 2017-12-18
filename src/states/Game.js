@@ -48,6 +48,7 @@ export default class extends Phaser.State {
     this.initUserInterface();
 
     this.isPlayersTurn = true;
+    this.isMonstersTurn = false;
 
     this.mushroom = new Mushroom({
       game: this.game,
@@ -103,17 +104,18 @@ export default class extends Phaser.State {
     let damage = game.player.calculateAttack();
     console.log('Attack: ' + damage);
     this.monsterHealthBar.updateHpBar(damage);
-    this.mob.recieveDamage(damage).onComplete.add(()=> this.isPlayersTurn = false);
+    this.mob.recieveDamage(damage).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
   }
 
   onDefendClick() {
-    this.disableButtons();                  
-    this.isPlayersTurn = false;
+    this.disableButtons();         
+    game.player.blocking = true;         
+    this.isPlayersTurn = false; this.isMonstersTurn = true;
   }
 
   onHealthPotClick() {
     this.disableButtons();                  
-    game.player.recieveHealing( 15 ).onComplete.add(()=> this.isPlayersTurn = false);
+    game.player.recieveHealing( 15 ).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
   }
 
   disableButtons() {
@@ -145,12 +147,13 @@ export default class extends Phaser.State {
     this.mobHp.setText( Phaser.Math.clampBottom(0,this.mob.hp.toFixed()) + "/" + this.mob.hpMax);
 
     if(game.player.isAlive() && this.mob.isAlive()){
-        if(!this.isPlayersTurn && this.mob.isAlive()) {  
+        if(!this.isPlayersTurn && this.isMonstersTurn && this.mob.isAlive()) {
+          this.isMonstersTurn = false;  
           let damage = this.mob.calculateAttack();  
         setTimeout(() => {
           this.playerHealthBar.updateHpBar(damage);
           game.player.recieveDamage(damage).onComplete.add(()=> {
-                    this.buttonList.forEach((item)=> {item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
+                    this.buttonList.forEach((item)=> { game.player.blocking = false; item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
         }, randomInt(200));
        
       }
