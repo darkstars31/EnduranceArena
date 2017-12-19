@@ -42,15 +42,16 @@ export default class extends Phaser.State {
 
     showStats(player) {
         let stats = [   { key: 'Strength', secondaryKey:'Damage',   secondaryStat: 'calculateAttackLowAndHigh'},
-                        { key: 'Agility', secondaryKey:'Evasion',   secondaryStat: 'calculateEvasionChance'},
+                        { key: 'Agility', secondaryKey:'Evasion(%)',   secondaryStat: 'calculateEvasionChance', isPercent: true},
                         { key: 'Dexterity', secondaryKey:'Accuracy', secondaryStat: 'calculateAccuracy'},
                         { key: 'Vitality', secondaryKey:'Max HP',   secondaryStat: 'calculateMaxHp'},
                         //{ key: 'Intellect'},
-                        { key: 'Luck', secondaryKey:'Critical', secondaryStat: 'calculateCriticalChance'}];
+                        { key: 'Luck', secondaryKey:'Critical(%)', secondaryStat: 'calculateCriticalChance', isPercent: true}];
         var spacing = 0;
         stats.forEach(statItem => {
             let item = this.add.text(this.world.width / 3 - 160, this.game.height/4 + spacing, statItem.key +": "+ game.player[statItem.key.toLowerCase()], {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
             let secondaryStatItem = this.add.text(this.world.width / 3 - 20, this.game.height/4 + spacing, statItem.secondaryKey +": "+  game.player[statItem.secondaryStat](), {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
+            //if(statItem.isPercent) this.add.text(this.world.width / 3 + 60, this.game.height/4 + spacing, '%', {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
             if(game.player.statPoints > 0) this.statPlusIconList.push(this.add.button(this.world.width / 3 - 190,this.game.height/4 + spacing, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item, secondaryStatItem )}, this));
             spacing += 32;
         });

@@ -108,9 +108,11 @@ export default class extends Phaser.State {
     if(game.player.calculateChanceToHit(this.mob)){
       let damage = game.player.calculateAttack();
       console.log('Attack: ' + damage);
-      this.monsterHealthBar.updateHpBar(damage);
       this.mob.recieveDamage(damage).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
+      this.monsterHealthBar.updateHpBar();
+
     } else {
+      game.player.wasBlocking = false;
       this.isPlayersTurn = false;
       this.isMonstersTurn = true;
     }
@@ -118,7 +120,8 @@ export default class extends Phaser.State {
 
   onDefendClick() {
     this.disableButtons();         
-    game.player.blocking = true;         
+    game.player.blocking = true; 
+    game.player.wasBlocking = true;        
     this.isPlayersTurn = false; this.isMonstersTurn = true;
   }
 
@@ -127,7 +130,7 @@ export default class extends Phaser.State {
         this.disableButtons();
         game.player.healthPotions -= 1;
         this.healthPotionCount.setText(game.player.healthPotions);
-        game.player.recieveHealing( 40 + game.player.vitality * 2.3 ).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
+        game.player.recieveHealing( 40 + (game.player.vitality * 3) - (game.player.vitality/2) ).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
     } else {
 
     } 
@@ -167,9 +170,10 @@ export default class extends Phaser.State {
           if(this.mob.calculateChanceToHit(game.player)){
             let damage = this.mob.calculateAttack();  
             setTimeout(() => {
-              this.playerHealthBar.updateHpBar(damage);
               game.player.recieveDamage(damage).onComplete.add(()=> {
                         this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
+                        this.playerHealthBar.updateHpBar();
+
             }, 750);
           } else {
             setTimeout(() => {

@@ -22,6 +22,7 @@ export default class Character {
 	this.inventory = [];
 	
 	this.blocking = false;
+	this.wasBlocking = false;
 
 	this.hp = 0;
 	this.hpMax = this.calculateMaxHp();
@@ -64,15 +65,17 @@ export default class Character {
 
 	calculateAttack() {    
 		let lowAndHigh = this.calculateAttackLowAndHigh();
-		let criticalDamage = 0;
-		if(randomInt(0,100) < this.calculateCriticalChance()){
-			criticalDamage = 1.4;
+		let criticalDamage = 1;
+		if(randomInt(0,100) < this.calculateCriticalChance() || this.wasBlocking){
+			this.wasBlocking = false;
+			criticalDamage = 2 + this.luck * .3;
 		}
-		return randomInt(lowAndHigh[0], lowAndHigh[1]) + this.baseAttack + this.level * criticalDamage; 
+		let total = randomInt(lowAndHigh[0], lowAndHigh[1]) + this.baseAttack + this.level;
+		return Math.round(total * criticalDamage); 
 	}
 
 	calculateEvasionChance() {
-		return [this.level + this.agility + this.luck / 5] * 10;
+		return Math.round([this.level + this.agility * 2 + this.luck / 5] / 1.5);
 	}
 
 	calculateAccuracy() {
