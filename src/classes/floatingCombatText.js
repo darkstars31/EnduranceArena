@@ -24,6 +24,17 @@ export default class FloatingCombatText {
         game.add.tween(damageText).to({ alpha: 0}, 2700, "Quart.easeOut",true, 300, 0, 0);
     }
 
+    displayText(text, obj) {
+        var damageText = game.add.text(obj.sprite.x + 1, obj.sprite.y + 10, text, {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
+        
+        damageText.scale.setTo(.7,.7);
+        damageText.anchor.setTo(.5, .45);
+        game.add.tween(damageText).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        game.add.tween(damageText.scale).to({ x: 1.2, y: 1.2}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        game.add.tween(damageText).to({ alpha: 0}, 2700, "Quart.easeOut",true, 300, 0, 0);
+    }
+
+
     displayHealing(healing, obj){
         var text = game.add.text(obj.sprite.x + 1, obj.sprite.y + 10, Math.abs(healing), {font: 'Patua One', fontSize: 18, fill: '#fff', smoothed: false})
         text.tint = '0x99ff7a';

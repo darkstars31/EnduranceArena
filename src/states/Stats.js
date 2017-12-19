@@ -61,7 +61,7 @@ export default class extends Phaser.State {
     }
 
     spendStatPoint(obj, item, item2) {
-        if(game.player.statPoints > 0){
+        if(game.player.statPoints > 1){
             game.player.spendStatPoint(obj);
             item.setText(obj.key +": "+ game.player[obj.key.toLowerCase()]);
             item2.setText(obj.secondaryKey+": " + game.player[obj.secondaryStat]());

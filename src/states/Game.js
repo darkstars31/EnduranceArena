@@ -58,6 +58,7 @@ export default class extends Phaser.State {
     })
 
     this.playerHealthBar = new HealthBar(game.player, 93,26);
+    this.playerHealthBar.setHpBar();
     this.monsterHealthBar = new HealthBar(this.mob, this.world.width - 93, 26, true);
     this.game.add.existing(this.mushroom)
   }
@@ -104,10 +105,15 @@ export default class extends Phaser.State {
     this.disableButtons();                  
     this.attackAudio = this.audioItems[this.rnd.integerInRange(0,this.audioItems.length - 1)];
     this.attackAudio.play();
-    let damage = game.player.calculateAttack();
-    console.log('Attack: ' + damage);
-    this.monsterHealthBar.updateHpBar(damage);
-    this.mob.recieveDamage(damage).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
+    if(game.player.calculateChanceToHit(this.mob)){
+      let damage = game.player.calculateAttack();
+      console.log('Attack: ' + damage);
+      this.monsterHealthBar.updateHpBar(damage);
+      this.mob.recieveDamage(damage).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
+    } else {
+      this.isPlayersTurn = false;
+      this.isMonstersTurn = true;
+    }
   }
 
   onDefendClick() {
@@ -121,7 +127,7 @@ export default class extends Phaser.State {
         this.disableButtons();
         game.player.healthPotions -= 1;
         this.healthPotionCount.setText(game.player.healthPotions);
-        game.player.recieveHealing( 40 + game.player.vitality * 2 ).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
+        game.player.recieveHealing( 40 + game.player.vitality * 2.3 ).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
     } else {
 
     } 
@@ -158,13 +164,18 @@ export default class extends Phaser.State {
     if(game.player.isAlive() && this.mob.isAlive()){
         if(!this.isPlayersTurn && this.isMonstersTurn && this.mob.isAlive()) {
           this.isMonstersTurn = false;  
-          let damage = this.mob.calculateAttack();  
-        setTimeout(() => {
-          this.playerHealthBar.updateHpBar(damage);
-          game.player.recieveDamage(damage).onComplete.add(()=> {
-                    this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
-        }, 750);
-       
+          if(this.mob.calculateChanceToHit(game.player)){
+            let damage = this.mob.calculateAttack();  
+            setTimeout(() => {
+              this.playerHealthBar.updateHpBar(damage);
+              game.player.recieveDamage(damage).onComplete.add(()=> {
+                        this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
+            }, 750);
+          } else {
+            setTimeout(() => {
+              this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;
+            }, 750);
+          }      
       }
     } else {
       this.stageMenu[0].visible = 1;

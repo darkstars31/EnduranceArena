@@ -51,16 +51,24 @@ export default class Character {
 	}
 
 	calculateAttackLowAndHigh() {
-		return [ Math.ceil((this.strength*1.8)/2) + this.baseAttack, this.strength*2 + this.baseAttack];
+		return [ Math.ceil(this.strength) + this.baseAttack, Math.ceil(this.strength*2.4) - this.strength + this.baseAttack];
+	}
+
+	calculateChanceToHit(target){
+		let isHit = randomInt(0,100) < [this.calculateAccuracy() - target.calculateEvasionChance()];
+		if(!isHit){
+			this.floatingCombatText.displayText('Miss', target);
+		}
+		return isHit;
 	}
 
 	calculateAttack() {    
-		let strengthBasedAttackBonus = this.strength * 2;
+		let lowAndHigh = this.calculateAttackLowAndHigh();
 		let criticalDamage = 0;
 		if(randomInt(0,100) < this.calculateCriticalChance()){
-		criticalDamage = this.baseAttack + strengthBasedAttackBonus;
+			criticalDamage = 1.4;
 		}
-		return randomInt((this.strength*1.8)/2, strengthBasedAttackBonus) + this.baseAttack + this.level + criticalDamage; 
+		return randomInt(lowAndHigh[0], lowAndHigh[1]) + this.baseAttack + this.level * criticalDamage; 
 	}
 
 	calculateEvasionChance() {

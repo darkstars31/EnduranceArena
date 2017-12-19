@@ -17,7 +17,7 @@ export default class extends Phaser.State {
 
     let menuItems = [{ label: 'New Game', inputEnabled: true, gameObject: null}, 
                      { label: 'Continue', inputEnabled: true, gameObject: null}, 
-                     { label: 'Stats', inputEnabled: true, gameObject: null},
+                     //{ label: 'Stats', inputEnabled: true, gameObject: null},
                      { label: 'Settings', inputEnabled: true, gameObject: null}
                 ];
     let menuSpacing = 0;
@@ -56,14 +56,14 @@ export default class extends Phaser.State {
     switch(item.text){
         case 'New Game':
             game.player.currentStage = 0;
-            this.state.start('Game'); 
+            this.state.start('Stats'); 
             break;
         case 'Continue':
             this.state.start('Game'); 
             break;
-        case 'Stats':
-            this.state.start('Stats'); 
-            break;
+        // case 'Stats':
+        //     this.state.start('Stats'); 
+        //     break;
         case 'Settings':
             this.state.start('Settings'); 
             break;

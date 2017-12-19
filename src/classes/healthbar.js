@@ -48,5 +48,10 @@ export default class HealthBar {
 		game.add.tween(this.hpBar).to({'width':  Phaser.Math.clampBottom(0, healthPercent)}, 500, "Quart.easeOut",true, 0, 0, 0);    
 	}
 
+	setHpBar(){
+		let healthPercent = this.hpBar.widthMax * (Phaser.Math.percent(this.character.hp, this.character.calculateMaxHp()));
+		this.hpBar.width = Phaser.Math.clampBottom(0, healthPercent);
+	}
+
 
 }
