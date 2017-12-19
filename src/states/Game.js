@@ -57,7 +57,7 @@ export default class extends Phaser.State {
       asset: 'mushroom'
     })
 
-    this.add.tween(this.add.text(this.world.centerX, this.game.height / 6, "Stage " + this.mob.level, {font: 'Bangers', fontSize: 48, fill: '#77BFA3', smoothed: false}).anchor.setTo(.5),
+    this.add.tween(this.add.text(this.world.centerX - 50, this.game.height / 6, "Stage " + this.mob.level, {font: 'Bangers', fontSize: 48, fill: '#77BFA3', smoothed: false})
     ).to({ alpha: 0}, 500, "Quart.easeOut",true, 2000, 0, 0);
 
     this.playerHealthBar = new HealthBar(game.player, 93,26);
