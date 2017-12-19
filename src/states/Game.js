@@ -19,9 +19,10 @@ export default class extends Phaser.State {
     this.audioItems.push(this.add.audio('audioHit1'));
     this.audioItems.push(this.add.audio('audioHit2'));
     this.audioItems.push(this.add.audio('audioHit3'));
+
     
     this.stageMenu = [];
-    this.stageMenu.push(this.add.text(this.world.centerX, this.game.height / 6, "Stage Complete", {font: 'Bangers', fontSize: 60, fill: '#77BFA3', smoothed: false}));
+    this.stageMenu.push(this.add.text(this.world.centerX, this.game.height / 6, "Stage Complete", {font: 'Bangers', fontSize: 48, fill: '#77BFA3', smoothed: false}));
     this.stageMenu.push(this.add.text(this.world.centerX + 120, this.game.height / 3, "Continue", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false}));
     this.stageMenu.push(this.add.text(this.world.centerX - 100, this.game.height / 3, "Item Shop", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false}));
     this.stageMenu.push(this.add.text(this.world.centerX, this.game.height / 3, "Return to Main Menu", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false}));
@@ -37,7 +38,6 @@ export default class extends Phaser.State {
     this.mob = new Monster(monsterData[game.player.currentStage]);
     this.mob.hp = this.mob.hpMax;
     game.player.animationSetup();
-    //game.player.hp = game.player.calculateMaxHp();
     
     this.buttonList = [];
     this.uiButtonsItems = [
@@ -56,6 +56,9 @@ export default class extends Phaser.State {
       y: this.world.height / 2 - 45,
       asset: 'mushroom'
     })
+
+    this.add.tween(this.add.text(this.world.centerX, this.game.height / 6, "Stage " + this.mob.level, {font: 'Bangers', fontSize: 48, fill: '#77BFA3', smoothed: false}).anchor.setTo(.5),
+    ).to({ alpha: 0}, 500, "Quart.easeOut",true, 2000, 0, 0);
 
     this.playerHealthBar = new HealthBar(game.player, 93,26);
     this.monsterHealthBar = new HealthBar(this.mob, this.world.width - 93, 26, true);

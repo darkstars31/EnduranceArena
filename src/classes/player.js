@@ -11,6 +11,12 @@ export default class Player extends character {
     this.healthPotions = 3;
   }
 
+  levelUp() {
+    this.level += 1;
+    this.experience = 0;
+    this.experienceToNext = this.experienceToNext + this.level * 77;
+  }
+
   spendStatPoint(statPointObj) {
     let stat = statPointObj.key.toLowerCase()
     this[stat] += 1;

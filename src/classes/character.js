@@ -8,6 +8,8 @@ export default class Character {
 	this.floatingCombatText = new FloatingCombatText();  
 	this.name 			= obj ? obj.name : '';
 	this.level 			= obj ? obj.level : 1;
+	this.experience		= obj ? obj.experience : 1;
+	this.experienceToNext = obj ? obj.experienceToNext : 100;
 	this.zeny 			= obj ? obj.zeny : 0;
 	this.statPoints 	= obj ? obj.statPoints : 0;
 	this.baseAttack 	= obj ? obj.baseAttack : 5;
@@ -68,7 +70,7 @@ export default class Character {
 		let criticalDamage = 1;
 		if(randomInt(0,100) < this.calculateCriticalChance() || this.wasBlocking){
 			this.wasBlocking = false;
-			criticalDamage = 2 + this.luck * .3;
+			criticalDamage = 2 + this.luck * .07;
 		}
 		let total = randomInt(lowAndHigh[0], lowAndHigh[1]) + this.baseAttack + this.level;
 		return Math.round(total * criticalDamage); 
