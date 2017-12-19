@@ -58,7 +58,6 @@ export default class extends Phaser.State {
     })
 
     this.playerHealthBar = new HealthBar(game.player, 93,26);
-    this.playerHealthBar.setHpBar();
     this.monsterHealthBar = new HealthBar(this.mob, this.world.width - 93, 26, true);
     this.game.add.existing(this.mushroom)
   }
@@ -109,8 +108,6 @@ export default class extends Phaser.State {
       let damage = game.player.calculateAttack();
       console.log('Attack: ' + damage);
       this.mob.recieveDamage(damage).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
-      this.monsterHealthBar.updateHpBar();
-
     } else {
       game.player.wasBlocking = false;
       this.isPlayersTurn = false;
@@ -163,6 +160,8 @@ export default class extends Phaser.State {
 
     game.playerHp.setText( Phaser.Math.clampBottom(0, game.player.hp.toFixed()) + "/" + game.player.calculateMaxHp());      
     this.mobHp.setText( Phaser.Math.clampBottom(0,this.mob.hp.toFixed()) + "/" + this.mob.calculateMaxHp());
+    this.monsterHealthBar.updateHpBar();
+    this.playerHealthBar.updateHpBar();
 
     if(game.player.isAlive() && this.mob.isAlive()){
         if(!this.isPlayersTurn && this.isMonstersTurn && this.mob.isAlive()) {
@@ -172,8 +171,6 @@ export default class extends Phaser.State {
             setTimeout(() => {
               game.player.recieveDamage(damage).onComplete.add(()=> {
                         this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
-                        this.playerHealthBar.updateHpBar();
-
             }, 750);
           } else {
             setTimeout(() => {

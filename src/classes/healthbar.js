@@ -8,11 +8,10 @@ export default class HealthBar {
 		this.character = character;
 		this.opposite = opposite;
 		this.createHealthBar(locX, locY);
+		this.setHpBar();
 	}
 
 	createHealthBar(barLocationX, barLocationY){
-		// let barLocationX = 93;
-		// let barLocationY = 26;
 		let barWidth = 242;
 		let barMargin = 4;
 		let barHeight = 10;
@@ -43,9 +42,9 @@ export default class HealthBar {
 		meters.add(this.hpBar);
 	}
 
-	updateHpBar(damage){	
-		let healthPercent = this.hpBar.widthMax * (Phaser.Math.percent(this.character.hp - damage, this.character.calculateMaxHp()));
-		game.add.tween(this.hpBar).to({'width':  Phaser.Math.clampBottom(0, healthPercent)}, 500, "Quart.easeOut",true, 0, 0, 0);    
+	updateHpBar(){	
+		let healthPercent = this.hpBar.widthMax * (Phaser.Math.percent(this.character.hp, this.character.calculateMaxHp()));
+		game.add.tween(this.hpBar).to({'width':  Phaser.Math.clampBottom(0, healthPercent)}, 250, "Quart.easeOut",true, 0, 0, 0);    
 	}
 
 	setHpBar(){
