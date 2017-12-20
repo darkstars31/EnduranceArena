@@ -4,7 +4,18 @@ import Player from '../classes/player';
 
 export default class extends Phaser.State {
   init () {
+    console.log(game.device);
     Object.freeze(Math);
+    Object.freeze(game.player);
+    if(!game.device.desktop){
+      this.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT; //NO_SCALE, SHOW_ALL, EXACT_FIT
+      this.scale.startFullScreen();
+      this.scale.setShowAll();
+      this.scale.refresh();
+      this.scale.forceOrientation(true, false);
+      // this.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);
+      // this.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOrientation, this);
+    }
     this.stage.backgroundColor = '#EDEEC9'
     this.fontsReady = false
     this.fontsLoaded = this.fontsLoaded.bind(this)
