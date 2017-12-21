@@ -6,6 +6,7 @@ export default class extends Phaser.State {
     preload () {}
   
     create () {
+        this.update = false;
         this.menuItemHoverAudio = this.add.audio('audioMenuHover');
 
         const bannerText = 'Character';
@@ -13,13 +14,13 @@ export default class extends Phaser.State {
         banner.padding.set(10, 16)
         banner.anchor.setTo(0.5)
 
-        let level = this.add.text(this.world.width / 3, this.game.height / 12, "Level "+ game.player.level, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
+        let level = this.add.text(this.world.width / 3 + 20, this.game.height / 12, "Level "+ game.player.level, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
         level.padding.set(10, 16)
 
-        let money = this.add.text(this.world.width / 3 + 100, this.game.height / 12, "Zeny "+ game.player.zeny, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
+        let money = this.add.text(this.world.width / 3 + 80, this.game.height / 12, "Zeny "+ game.player.zeny, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
         money.padding.set(10, 16)
 
-        this.statPoints = this.add.text(this.world.width / 2 + 200, this.game.height / 12, "Stat Points "+ game.player.statPoints, {font: 'Bangers', fontSize: 24, fill: '#77BFA3', smoothed: false})
+        this.statPoints = this.add.text(this.world.width / 3 + 180, this.game.height / 12, "Stat Points "+ game.player.statPoints, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
         this.statPoints.padding.set(10, 16)
 
         let menuItems = [{ label: 'Back', location: {x: this.world.centerX - 50, y:this.game.height - 60 }, inputEnabled: true, gameObject: null},
@@ -41,18 +42,19 @@ export default class extends Phaser.State {
     }
 
     showStats(player) {
-        let stats = [   { key: 'Strength', secondaryKey:'Damage',   secondaryStat: 'calculateAttackLowAndHigh'},
+        this.primaryStatsList = [];
+        this.secondaryStatsList = [];
+        this.stats = [   { key: 'Strength', secondaryKey:'Damage',   secondaryStat: 'calculateAttackLowAndHigh'},
                         { key: 'Agility', secondaryKey:'Evasion(%)',   secondaryStat: 'calculateEvasionChance', isPercent: true},
                         { key: 'Dexterity', secondaryKey:'Accuracy', secondaryStat: 'calculateAccuracy'},
                         { key: 'Vitality', secondaryKey:'Max HP',   secondaryStat: 'calculateMaxHp'},
                         //{ key: 'Intellect'},
                         { key: 'Luck', secondaryKey:'Critical(%)', secondaryStat: 'calculateCriticalChance', isPercent: true}];
         var spacing = 0;
-        stats.forEach(statItem => {
+        this.stats.forEach(statItem => {
             let item = this.add.text(this.world.width / 3 - 160, this.game.height/4 + spacing, statItem.key +": "+ game.player[statItem.key.toLowerCase()], {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
-            let secondaryStatItem = this.add.text(this.world.width / 3 - 20, this.game.height/4 + spacing, statItem.secondaryKey +": "+  game.player[statItem.secondaryStat](), {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
-            //if(statItem.isPercent) this.add.text(this.world.width / 3 + 60, this.game.height/4 + spacing, '%', {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
-            if(game.player.statPoints > 0) this.statPlusIconList.push(this.add.button(this.world.width / 3 - 190,this.game.height/4 + spacing, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item, secondaryStatItem )}, this));
+            this.secondaryStatsList.push(this.add.text(this.world.width / 3 - 20, this.game.height/4 + spacing, statItem.secondaryKey +": "+  game.player[statItem.secondaryStat](), {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false}));
+            if(game.player.statPoints > 0) this.statPlusIconList.push(this.add.button(this.world.width / 3 - 190,this.game.height/4 + spacing, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item )}, this));
             spacing += 32;
         });
 
@@ -61,11 +63,11 @@ export default class extends Phaser.State {
         });
     }
 
-    spendStatPoint(obj, item, item2) {
+    spendStatPoint(obj, item) {
+        this.update = true;
         if(game.player.statPoints > 1){
             game.player.spendStatPoint(obj);
             item.setText(obj.key +": "+ game.player[obj.key.toLowerCase()]);
-            item2.setText(obj.secondaryKey+": " + game.player[obj.secondaryStat]());
             this.statPoints.setText("Stat Points "+ Phaser.Math.clampBottom(0, game.player.statPoints));
         } else {
             this.statPlusIconList.forEach((item) => {
@@ -109,6 +111,12 @@ export default class extends Phaser.State {
       }
 
     render () {
-        
+       if(this.update){
+            this.secondaryStatsList.forEach((item,index) => {
+                item.text = this.stats[index].secondaryKey +": "+  game.player[this.stats[index].secondaryStat]()
+            });
+            this.update = false;
+        }
+     
     }
 }

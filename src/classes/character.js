@@ -77,7 +77,7 @@ export default class Character {
 	}
 
 	calculateEvasionChance() {
-		return Math.round([this.level + this.agility * 2 + this.luck / 5] / 1.5);
+		return Math.round([this.level + this.agility * 2 + this.luck / 4] / 1.5);
 	}
 
 	calculateAccuracy() {

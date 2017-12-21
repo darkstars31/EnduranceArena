@@ -24,7 +24,7 @@ export default class extends Phaser.State {
     this.stageMenu = [];
     this.stageMenu.push(this.add.text(this.world.centerX, this.game.height / 6, "Stage Complete", {font: 'Bangers', fontSize: 48, fill: '#77BFA3', smoothed: false}));
     this.stageMenu.push(this.add.text(this.world.centerX + 120, this.game.height / 3, "Continue", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false}));
-    this.stageMenu.push(this.add.text(this.world.centerX - 100, this.game.height / 3, "Item Shop", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false}));
+    this.stageMenu.push(this.add.text(this.world.centerX - 100, this.game.height / 3, "", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false})); // Item Shop, Label Removed
     this.stageMenu.push(this.add.text(this.world.centerX, this.game.height / 3, "Return to Main Menu", {font: 'Bangers', fontSize: 24, fill: '#000020', smoothed: false}));
 
     this.stageMenu.forEach(item => {
@@ -34,7 +34,12 @@ export default class extends Phaser.State {
       item.visible = false;
     });
    
+    
+
     let monsterData = this.cache.getJSON('MonsterData');
+    if(game.player.currentStage > monsterData.length - 1){
+      game.stage.start('MainMenu');
+    }
     this.mob = new Monster(monsterData[game.player.currentStage]);
     this.mob.hp = this.mob.hpMax;
     game.player.animationSetup();
@@ -60,17 +65,17 @@ export default class extends Phaser.State {
     this.add.tween(this.add.text(this.world.centerX - 50, this.game.height / 6, "Stage " + this.mob.level, {font: 'Bangers', fontSize: 48, fill: '#77BFA3', smoothed: false})
     ).to({ alpha: 0}, 500, "Quart.easeOut",true, 2000, 0, 0);
 
-    this.playerHealthBar = new HealthBar(game.player, 93,26);
-    this.monsterHealthBar = new HealthBar(this.mob, this.world.width - 93, 26, true);
+    this.playerHealthBar = new HealthBar(game.player, 73,(this.game.height / 12) - 7);
+    this.monsterHealthBar = new HealthBar(this.mob, this.world.width - 73, (this.game.height / 12) - 7, true);
     this.game.add.existing(this.mushroom)
   }
 
   initUserInterface () {
-    game.playerHp = this.add.text(60, this.game.height / 12, game.player.hp + "/" + game.player.calculateMaxHp(), {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
+    game.playerHp = this.add.text(40, this.game.height / 12, game.player.hp + "/" + game.player.calculateMaxHp(), {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
     game.playerHp.anchor.setTo(0.5);
     game.playerHp.scale.setTo(1,.8);
 
-    this.mobHp = this.add.text( this.game.width - 60, this.game.height / 12, this.mob.hp + "/" + this.mob.calculateMaxHp(), {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
+    this.mobHp = this.add.text( this.game.width - 40, this.game.height / 12, this.mob.hp + "/" + this.mob.calculateMaxHp(), {font: 'Patua One', fontSize: 16, fill: '#fff', smoothed: false})
     this.mobHp.anchor.setTo(0.5)
     this.mobHp.scale.setTo(1,.8);
 

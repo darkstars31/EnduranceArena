@@ -12,7 +12,7 @@ export default class HealthBar {
 	}
 
 	createHealthBar(barLocationX, barLocationY){
-		let barWidth = 242;
+		let barWidth = game.world.width * .27;
 		let barMargin = 4;
 		let barHeight = 10;
 		var meters = game.add.group();
@@ -33,7 +33,7 @@ export default class HealthBar {
 		healthBitmap.ctx.fill();
 	 
 		// create the health Sprite using the red rectangle bitmap data
-		this.hpBar = game.add.sprite(barLocationX + 2, barLocationY + 2, healthBitmap);
+		this.hpBar = game.add.sprite(barLocationX - 2, barLocationY + 2, healthBitmap);
 		if(this.opposite){
 			healthMeterBG.anchor.setTo(1,0);
 			this.hpBar.anchor.setTo(1,0);
