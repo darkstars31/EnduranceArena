@@ -34,13 +34,13 @@ export default class Character {
 		return this.hp > 0 ? true : false;
 	}
 
-	recieveDamage(damage) {
+	recieveDamage(damage, isCrit) {
 		if(this.blocking){
 			damage = Math.floor(Phaser.Math.clampBottom(1, damage / 2));
 			this.blocking = false;
 		}
 		this.animationHurt();
-		this.floatingCombatText.displayDamage(damage, this);
+		this.floatingCombatText.displayDamage(damage, this, isCrit);
 		return game.add.tween(this).to({hp: this.hp - damage}, 500, Phaser.Easing.Sinusoidal.Out, true);
 	}
 

@@ -64,6 +64,7 @@ export default class extends Phaser.State {
     }
 
     spendStatPoint(obj, item) {
+        this.menuItemHoverAudio.play();
         this.update = true;
         if(game.player.statPoints > 1){
             game.player.spendStatPoint(obj);

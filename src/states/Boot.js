@@ -6,12 +6,10 @@ export default class extends Phaser.State {
   init () {
     Object.freeze(Math);
     if(!game.device.desktop){
-      this.scale.fullScreenScaleMode = Phaser.ScaleManager.EXACT_FIT; //NO_SCALE, SHOW_ALL, EXACT_FIT
-      this.scale.startFullScreen();
-      this.scale.setShowAll();
-      this.scale.refresh();
+      this.startedInPortraitMode = window.screen.width < window.screen.height;
       this.scale.forceOrientation(true, false);
-      this.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);
+      this.scale.fullScreenScaleMode = Phaser.ScaleManager.SHOW_ALL; //NO_SCALE, SHOW_ALL, EXACT_FIT
+      this.scale.refresh();
       this.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOrientation, this);
     }
     this.stage.backgroundColor = '#EDEEC9'
@@ -19,16 +17,10 @@ export default class extends Phaser.State {
     this.fontsLoaded = this.fontsLoaded.bind(this)
   }
 
-  enterIncorrectOrientation() {
-    //this.scale.refresh();
-    //this.state.start('PleaseRotate');
-  }
   leaveIncorrectOrientation() {
-    var height = window.screen.height;
-    var width = window.screen.width;	
-    game.renderer.resize(width, height);
-    //this.scale.refresh();
-    //this.state.start("MainMenu");
+    if(this.startedInPortraitMode){
+      location.reload();
+    }
   }
 
   preload () {
@@ -86,6 +78,10 @@ export default class extends Phaser.State {
     this.load.audio('battleStage','./assets/audio/prologue.ogg')
     this.load.audio('audioMenuSelect','./assets/audio/MENU_Select.ogg')
     this.load.audio('audioMenuHover','./assets/audio/menuHover.ogg')
+
+    this.load.audio('audioAmuletSoundEffect','./assets/audio/amuletEpicSoundEffect.ogg')
+
+
     this.load.audio('audioHit1','./assets/audio/hit1.ogg')
     this.load.audio('audioHit2','./assets/audio/hit2.ogg')
     this.load.audio('audioHit3','./assets/audio/hit3.ogg')

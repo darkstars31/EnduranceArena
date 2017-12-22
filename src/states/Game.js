@@ -15,6 +15,8 @@ export default class extends Phaser.State {
     background.scale.setTo(.7,.7);
     this.cloudGeneration();
 
+    this.amuletSoundEffect = this.add.audio('audioAmuletSoundEffect');
+
     this.audioItems = [];
     this.audioItems.push(this.add.audio('audioHit1'));
     this.audioItems.push(this.add.audio('audioHit2'));
@@ -111,11 +113,12 @@ export default class extends Phaser.State {
   onAttackClick() {
     this.disableButtons();                  
     this.attackAudio = this.audioItems[this.rnd.integerInRange(0,this.audioItems.length - 1)];
-    this.attackAudio.play();
     if(game.player.calculateChanceToHit(this.mob)){
+      this.attackAudio.play();
       let damage = game.player.calculateAttack();
+      let isCrit = damage > game.player.calculateAttackLowAndHigh()[1] + 10;
       console.log('Attack: ' + damage);
-      this.mob.recieveDamage(damage).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
+      this.mob.recieveDamage(damage, isCrit).onComplete.add(()=> {this.isPlayersTurn = false; this.isMonstersTurn = true;});
     } else {
       game.player.wasBlocking = false;
       this.isPlayersTurn = false;
@@ -132,6 +135,7 @@ export default class extends Phaser.State {
 
   onHealthPotClick() {
     if(game.player.healthPotions > 0){
+        this.amuletSoundEffect.play();
         this.disableButtons();
         game.player.healthPotions -= 1;
         this.healthPotionCount.setText(game.player.healthPotions);
@@ -177,7 +181,8 @@ export default class extends Phaser.State {
           if(this.mob.calculateChanceToHit(game.player)){
             let damage = this.mob.calculateAttack();  
             setTimeout(() => {
-              game.player.recieveDamage(damage).onComplete.add(()=> {
+              let isCrit = damage > this.mob.calculateAttackLowAndHigh()[1] + 10;
+              game.player.recieveDamage(damage,isCrit).onComplete.add(()=> {
                         this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
             }, 750);
           } else {
