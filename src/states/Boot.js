@@ -72,6 +72,8 @@ export default class extends Phaser.State {
     this.load.spritesheet('poringAttack', './assets/images/spritesheets/poringAttack.png', 60, 45, 7, 0, 0)
     this.load.spritesheet('poringDamaged', './assets/images/spritesheets/poringDamaged.png', 52, 53, 2, 0, 0)
     this.load.spritesheet('poringDeath', './assets/images/spritesheets/poringDeath.png', 96, 75, 5, 0, 0)
+
+    this.load.atlas('highorc', './assets/images/spritesheets/highorcspritesheet.png', './assets/images/spritesheets/atlases/highorc.json')
     
     
     // Audio
@@ -91,7 +93,6 @@ export default class extends Phaser.State {
   create () {
    
     this.game.player = new Player();
-    game.player.statPoints = 40;
    
     
     var music = this.add.audio('battleStage').play();

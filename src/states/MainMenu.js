@@ -1,5 +1,6 @@
 /* globals __DEV__ */
 import Phaser from 'phaser'
+import Player from '../classes/player';
 
 export default class extends Phaser.State {
   init () {}
@@ -54,16 +55,13 @@ export default class extends Phaser.State {
   onMenuItemClick(item) {
     this.add.audio('audioMenuSelect').play();
     switch(item.text){
-        case 'New Game':
-            game.player.currentStage = 0;
+        case 'New Game':           
+            game.player = new Player();
             this.state.start('Stats'); 
             break;
         case 'Continue':
             this.state.start('Game'); 
             break;
-        // case 'Stats':
-        //     this.state.start('Stats'); 
-        //     break;
         case 'Settings':
             this.state.start('Settings'); 
             break;

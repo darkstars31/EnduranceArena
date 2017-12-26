@@ -18,7 +18,7 @@ export default class FloatingCombatText {
         damageText.anchor.setTo(.5, .45);
 
         game.add.tween(background).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
-        game.add.tween(damageText).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        game.add.tween(damageText).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0); //obj.sprite.y - 140
         game.add.tween(background.scale).to({ x: 1, y: 1}, 2000, "Quart.easeOut",true, 0, 0, 0);
         game.add.tween(damageText.scale).to({ x: 1.2, y: 1.2}, 2000, "Quart.easeOut",true, 0, 0, 0);
         game.add.tween(background).to({ alpha: 0}, 2700, "Quart.easeOut",true, 300, 0, 0);
@@ -30,7 +30,7 @@ export default class FloatingCombatText {
         
         damageText.scale.setTo(.7,.7);
         damageText.anchor.setTo(.5, .45);
-        game.add.tween(damageText).to({y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
+        game.add.tween(damageText).to({x: obj.sprite.x - 10, y: obj.sprite.y - 140}, 2000, "Quart.easeOut",true, 0, 0, 0);
         game.add.tween(damageText.scale).to({ x: 1.2, y: 1.2}, 2000, "Quart.easeOut",true, 0, 0, 0);
         game.add.tween(damageText).to({ alpha: 0}, 2700, "Quart.easeOut",true, 300, 0, 0);
     }

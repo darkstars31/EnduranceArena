@@ -11,7 +11,7 @@ export default class Character {
 	this.experience		= obj ? obj.experience : 1;
 	this.experienceToNext = obj ? obj.experienceToNext : 100;
 	this.zeny 			= obj ? obj.zeny : 0;
-	this.statPoints 	= obj ? obj.statPoints : 0;
+	this.statPoints 	= obj ? obj.statPoints : 40;
 	this.baseAttack 	= obj ? obj.baseAttack : 5;
 
 	this.strength 		= obj ? obj.stats.strength : 1;
