@@ -28,6 +28,10 @@ export default class extends Phaser.State {
         this.statPoints = this.add.text(this.world.width / 3 + 180, this.game.height / 12, "Stat Points "+ game.player.statPoints, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
         this.statPoints.padding.set(10, 16)
 
+        this.skillPoints = this.add.text(this.world.width / 3 + 300, this.game.height / 12, "Skill Points "+ game.player.skillPoints, {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
+        this.statPoints.padding.set(10, 16)
+
+
         let menuItems = [{ label: 'Back', location: {x: this.world.centerX - 50, y:this.game.height - 60 }, inputEnabled: true, gameObject: null},
                          { label: 'Next', location: {x: this.world.centerX + 50, y:this.game.height - 60 }, inputEnabled: true, gameObject: null},
                          { label: 'Stats', location: {x: this.world.width / 3 - 50, y:this.game.height/5 }, inputEnabled: false, gameObject: null},
@@ -43,13 +47,15 @@ export default class extends Phaser.State {
         });
 
         this.statPlusIconList = [];
+        this.skillPlusIconList = [];
         this.showStats(game.player);
+        this.showSkills(game.player);
     }
 
     showStats(player) {
         this.primaryStatsList = [];
         this.secondaryStatsList = [];
-        this.stats = [   { key: 'Strength', secondaryKey:'Damage',   secondaryStat: 'calculateAttackLowAndHigh'},
+        this.stats = [  { key: 'Strength', secondaryKey:'Damage',   secondaryStat: 'calculateAttackLowAndHigh'},
                         { key: 'Agility', secondaryKey:'Evasion(%)',   secondaryStat: 'calculateEvasionChance', isPercent: true},
                         { key: 'Dexterity', secondaryKey:'Accuracy', secondaryStat: 'calculateAccuracy'},
                         { key: 'Vitality', secondaryKey:'Max HP',   secondaryStat: 'calculateMaxHp'},
@@ -59,7 +65,7 @@ export default class extends Phaser.State {
         this.stats.forEach(statItem => {
             let item = this.add.text(this.world.width / 3 - 160, this.game.height/4 + spacing, statItem.key +": "+ game.player[statItem.key.toLowerCase()], {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
             this.secondaryStatsList.push(this.add.text(this.world.width / 3 - 20, this.game.height/4 + spacing, statItem.secondaryKey +": "+  game.player[statItem.secondaryStat](), {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false}));
-            if(game.player.statPoints > 0) this.statPlusIconList.push(this.add.button(this.world.width / 3 - 190,this.game.height/4 + 4 + spacing, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item )}, this));
+            if(game.player.statPoints > 0) this.statPlusIconList.push(this.add.button(item.x - 26,item.y + 3, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item )}, this));
             spacing += 32;
         });
 
@@ -68,19 +74,54 @@ export default class extends Phaser.State {
         });
     }
 
+    showSkills(player) {
+        this.primarySkillsList = [];
+        this.secondarySkillsList = [];
+        this.skills = [     { key: 'Regen'},
+                            { key: 'Riposte'},
+                            { key: 'Poison'}
+                        ];
+        var spacing = 0;
+        this.skills.forEach(statItem => {
+            let item = this.add.text(this.world.width / (3/2) - 50, this.game.height/4 + spacing, statItem.key +": "+ game.player.skills[statItem.key.toLowerCase()], {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
+            if(game.player.skillPoints > 0) this.skillPlusIconList.push(this.add.button(item.x - 26,item.y + 3, 'statPlusIcon', ()=> { this.spendSkillPoint(statItem, item )}, this));
+            spacing += 32;
+        });
+
+        this.skillPlusIconList.forEach((item) => {
+            item.scale.setTo(.1,.1);
+        });
+    }
+
     spendStatPoint(obj, item) {
         this.menuItemHoverAudio.play();
         this.update = true;
-        if(game.player.statPoints > 1){
+        if(game.player.statPoints >= 1){
             game.player.spendStatPoint(obj);
             item.setText(obj.key +": "+ game.player[obj.key.toLowerCase()]);
             this.statPoints.setText("Stat Points "+ Phaser.Math.clampBottom(0, game.player.statPoints));
-        } else {
+        } 
+        if(game.player.statPoints < 1) {
             this.statPlusIconList.forEach((item) => {
                 item.destroy();
             });
         }
- 
+    }
+
+    spendSkillPoint(obj, item) {
+        this.menuItemHoverAudio.play();
+        if(game.player.skillPoints >= 1){
+            game.player.spendSkillPoint(obj);
+            this.skillPoints.setText("Skill Points " + Phaser.Math.clampBottom(0, game.player.skillPoints));
+            item.setText(obj.key +": "+ game.player.skills[obj.key.toLowerCase()]);
+        } 
+
+        if(game.player.skillPoints < 1){
+            this.skillPlusIconList.forEach((item) => {
+                item.destroy();
+            });
+
+        }
     }
 
     addInputs(item) {

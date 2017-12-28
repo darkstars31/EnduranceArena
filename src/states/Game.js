@@ -174,8 +174,12 @@ export default class extends Phaser.State {
           } else {          
             setTimeout(() => {       
               this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;
-            }, 500);
-          }      
+            }, 750);
+          }   
+
+          setTimeout(() => {       
+            game.player.postRoundEvents();
+          }, 1500);   
       }
     } else {
       this.stageMenu[0].visible = 1;

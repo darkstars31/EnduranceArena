@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import { randomInt } from '../utils';
+import Regen from '../classes/regenSkill'
 import SoundFx from '../classes/soundfx'
 import FloatingCombatText from './floatingCombatText'
 
@@ -12,8 +13,15 @@ export default class Character {
 	this.experience		= obj ? obj.experience : 0;
 	this.experienceToNext = obj ? obj.experienceToNext : 100;
 	this.zeny 			= obj ? obj.zeny : 0;
-	this.statPoints 	= obj ? obj.statPoints : 40;
+	this.statPoints 	= obj ? obj.statPoints : 20;
+	this.skillPoints	= obj ? obj.skillPoints : 1;
 	this.baseAttack 	= obj ? obj.baseAttack : 5;
+
+	this.skills = {
+		regen: 0,
+		riposte: 0,
+		poison: 0
+	}
 
 	this.strength 		= obj ? obj.stats.strength : 1;
 	this.agility 		= obj ? obj.stats.agility : 1;
@@ -31,6 +39,7 @@ export default class Character {
 	this.hpMax = this.calculateMaxHp();
 
 	this.sounds = new SoundFx();
+	this.regen = new Regen(this);
 	}
 	
 	isAlive() {
@@ -94,6 +103,14 @@ export default class Character {
 
   calculateHp () {
       this.hp = this.hp.toFixed();
+  }
+
+  preAttackEvents() {
+
+  }
+
+  postRoundEvents() {
+		if(this.skills.regen > 0) this.regen.execute(this.skills.regen);
   }
 
   useItem () {

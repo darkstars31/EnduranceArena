@@ -8,8 +8,9 @@ export default class Player extends character {
   constructor (args) {
     super(args);
     this.currentStage = 0;
-
+    this.skillPoints = 1;
     this.healthPotions = 3;
+
   }
 
   levelUp() {
@@ -20,12 +21,19 @@ export default class Player extends character {
     this.experience = 0;
     this.experienceToNext = this.experienceToNext + this.level * 77;
     this.statPoints += 8;
+    this.skillPoints += 1;
   }
 
   spendStatPoint(statPointObj) {
     let stat = statPointObj.key.toLowerCase()
     this[stat] += 1;
     this.statPoints -= Math.floor([(this[stat] - 1)/10]) + 1;
+  }
+
+  spendSkillPoint(skillPointObj){
+    let skill = skillPointObj.key.toLowerCase()
+    this.skillPoints -= 1;
+    this.skills[skill] += 1;
   }
 
   animationSetup() {
