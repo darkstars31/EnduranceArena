@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
 import character from './character';
+import FloatingCombatText from './floatingCombatText'
 import { randomInt } from '../utils';
 
 export default class Player extends character {
@@ -12,6 +13,9 @@ export default class Player extends character {
   }
 
   levelUp() {
+    this.audioLevelUp = game.add.audio('audioLevelUp');
+    this.audioLevelUp.play();
+    this.floatingCombatText.displayText('Level Up', this);
     this.level += 1;
     this.experience = 0;
     this.experienceToNext = this.experienceToNext + this.level * 77;

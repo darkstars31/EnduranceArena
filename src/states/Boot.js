@@ -76,17 +76,27 @@ export default class extends Phaser.State {
     this.load.atlas('highorc', './assets/images/spritesheets/highorcspritesheet.png', './assets/images/spritesheets/atlases/highorc.json')
     
     
-    // Audio
+    // Audio - http://www.soundsboom.com/categories great free sounds 
     this.load.audio('battleStage','./assets/audio/prologue.ogg')
     this.load.audio('audioMenuSelect','./assets/audio/MENU_Select.ogg')
     this.load.audio('audioMenuHover','./assets/audio/menuHover.ogg')
 
+    this.load.audio('audioLevelUp','./assets/audio/LevelUp.ogg')
     this.load.audio('audioAmuletSoundEffect','./assets/audio/amuletEpicSoundEffect.ogg')
 
+    this.load.audio('audioShield','./assets/audio/shieldSound.ogg')
 
     this.load.audio('audioHit1','./assets/audio/hit1.ogg')
     this.load.audio('audioHit2','./assets/audio/hit2.ogg')
     this.load.audio('audioHit3','./assets/audio/hit3.ogg')
+
+    this.load.audio('audioPlayerDamaged','./assets/audio/playerDamaged.ogg')
+
+    this.load.audio('audioMiss1','./assets/audio/miss1.ogg')
+    this.load.audio('audioMiss2','./assets/audio/miss2.ogg')
+    this.load.audio('audioMiss3','./assets/audio/miss3.ogg')
+    this.load.audio('audioMiss4','./assets/audio/miss4.ogg')
+
     
   }
 

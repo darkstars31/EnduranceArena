@@ -28,6 +28,12 @@ export default class Character {
 
 	this.hp = 0;
 	this.hpMax = this.calculateMaxHp();
+
+	this.audioAttackMissList = [];
+    this.audioAttackMissList.push(game.add.audio('audioMiss1'));
+    this.audioAttackMissList.push(game.add.audio('audioMiss2'));
+    this.audioAttackMissList.push(game.add.audio('audioMiss3'));
+    this.audioAttackMissList.push(game.add.audio('audioMiss4'));
 	}
 	
 	isAlive() {
@@ -60,6 +66,8 @@ export default class Character {
 	calculateChanceToHit(target){
 		let isHit = randomInt(0,100) < [this.calculateAccuracy() - target.calculateEvasionChance()];
 		if(!isHit){
+			this.missAudio = this.audioAttackMissList[randomInt(0,this.audioAttackMissList.length - 1)];
+            this.missAudio.play();
 			this.floatingCombatText.displayText('Miss', target);
 		}
 		return isHit;

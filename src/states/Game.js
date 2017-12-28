@@ -4,6 +4,7 @@ import Mushroom from '../sprites/Mushroom'
 import Player from '../classes/player'
 import Monster from '../classes/monster'
 import HealthBar from '../classes/healthbar'
+import Environment from '../classes/environment'
 import { randomInt } from '../utils'
 
 export default class extends Phaser.State {
@@ -13,15 +14,17 @@ export default class extends Phaser.State {
   create () {
     let background = this.add.sprite(0,0, 'battleBackground1');
     background.scale.setTo(.7,.7);
-    this.cloudGeneration();
+    this.environment = new Environment();
+    this.environment.cloudGeneration();
 
     this.amuletSoundEffect = this.add.audio('audioAmuletSoundEffect');
+    this.shieldSoundEffect = this.add.audio('audioShield');
+    this.playerDamagedSoundEffect = this.add.audio('audioPlayerDamaged');
 
     this.audioItems = [];
     this.audioItems.push(this.add.audio('audioHit1'));
     this.audioItems.push(this.add.audio('audioHit2'));
     this.audioItems.push(this.add.audio('audioHit3'));
-
     
     this.stageMenu = [];
     this.stageMenu.push(this.add.text(this.world.centerX, this.game.height / 6, "Stage Complete", {font: 'Bangers', fontSize: 48, fill: '#77BFA3', smoothed: false}));
@@ -54,6 +57,7 @@ export default class extends Phaser.State {
     ];
     this.initUserInterface();
 
+    this.stageEnded = false;
     this.leveledUp = false;
     this.isPlayersTurn = true;
     this.isMonstersTurn = false;
@@ -99,11 +103,7 @@ export default class extends Phaser.State {
     switch(item._text){
       case 'Continue':
             game.player.currentStage += 1;
-            game.player.experience += this.mob.experience;
-            game.player.zeny += randomInt(this.mob.level*50, this.mob.level*100); 
-            console.log('exp: ' + game.player.experience);
-            if(game.player.experience > game.player.experienceToNext){
-              game.player.levelUp();
+            if(this.leveledUp){
               game.state.start('Stats');
             } else {
               game.state.start('Game');
@@ -121,8 +121,8 @@ export default class extends Phaser.State {
 
   onAttackClick() {
     this.disableButtons();                  
-    this.attackAudio = this.audioItems[this.rnd.integerInRange(0,this.audioItems.length - 1)];
     if(game.player.calculateChanceToHit(this.mob)){
+      this.attackAudio = this.audioItems[this.rnd.integerInRange(0,this.audioItems.length - 1)];
       this.attackAudio.play();
       let damage = game.player.calculateAttack();
       let isCrit = damage > game.player.calculateAttackLowAndHigh()[1] + 10;
@@ -136,7 +136,8 @@ export default class extends Phaser.State {
   }
 
   onDefendClick() {
-    this.disableButtons();         
+    this.disableButtons();     
+    this.shieldSoundEffect.play();    
     game.player.blocking = true; 
     game.player.wasBlocking = true;        
     this.isPlayersTurn = false; this.isMonstersTurn = true;
@@ -158,26 +159,8 @@ export default class extends Phaser.State {
     this.buttonList.forEach((item)=> {item.inputEnabled = false; item.tint = '0x616161'});                      
   }
 
-  cloudGeneration() {
-    let numClouds = this.rnd.integerInRange(1, 10);
-    this.clouds = [];
-    for(let i = 0;i < numClouds; i++){
-      let cloud = this.add.sprite(this.rnd.integerInRange(-400,-160),this.rnd.integerInRange(8,60), 'cloud1');
-      let cloudScale = this.rnd.integerInRange(2,5) / 12;
-      cloud.alpha = this.rnd.integerInRange(2,6) / 10;
-      cloud.scale.setTo(cloudScale,cloudScale);
-      cloud.speed = cloudScale;
-      this.clouds.push(cloud);
-    }
-  }
-
   render () {
-    this.clouds.forEach((cloud) => {
-      cloud.x += cloud.speed / 2;
-      if(cloud.x > 900){
-        cloud.x = this.rnd.integerInRange(-500,-160);
-      }
-    });
+   this.environment.updateClouds();
 
     game.playerHp.setText( Phaser.Math.clampBottom(0, game.player.hp.toFixed()) + "/" + game.player.calculateMaxHp());      
     this.mobHp.setText( Phaser.Math.clampBottom(0,this.mob.hp.toFixed()) + "/" + this.mob.calculateMaxHp());
@@ -190,25 +173,27 @@ export default class extends Phaser.State {
           if(this.mob.calculateChanceToHit(game.player)){
             let damage = this.mob.calculateAttack();  
             setTimeout(() => {
+              this.playerDamagedSoundEffect.play();
               let isCrit = damage > this.mob.calculateAttackLowAndHigh()[1] + 10;
               game.player.recieveDamage(damage,isCrit).onComplete.add(()=> {
                         this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
             }, 750);
-          } else {
-            setTimeout(() => {
+          } else {          
+            setTimeout(() => {       
               this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;
-            }, 750);
+            }, 500);
           }      
       }
     } else {
       this.stageMenu[0].visible = 1;
       this.buttonList.forEach((item)=> item.inputEnabled = false);    
-      if(!game.player.isAlive()) {
+      if(!game.player.isAlive() && !this.stageEnded) {
         this.endOfRoundEvent(false);
       }
-      if(!this.mob.isAlive()){
+      if(!this.mob.isAlive() && !this.stageEnded){
         this.endOfRoundEvent(true);   
       }
+      this.stageEnded = true;
     }
 
     //this.mushroom.x = game.player.sprite.x;
@@ -221,7 +206,14 @@ export default class extends Phaser.State {
     if(playerWins){
       this.stageMenu[1].visible = 1;
       this.stageMenu[2].visible = 1;
-      this.mob.animationDeath();   
+      this.mob.animationDeath();  
+      game.player.experience += this.mob.experience;
+      game.player.zeny += randomInt(this.mob.level*50, this.mob.level*100);  
+      if(game.player.experience > game.player.experienceToNext){
+        game.player.levelUp();
+        this.leveledUp = true;
+      }
+      console.log('exp: ' + game.player.experience + ' zeny: '+ game.player.zeny);     
     } else {
       this.stageMenu[0].fill = 'red';
       this.stageMenu[0].text = "YOU DIED";

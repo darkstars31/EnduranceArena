@@ -6,6 +6,11 @@ export default class extends Phaser.State {
     preload () {}
   
     create () {
+        let background = this.add.sprite(0,0, 'battleBackground1');
+        background.scale.setTo(.7,.7);
+        background.tint = "0x565656";
+    
+
         this.update = false;
         this.menuItemHoverAudio = this.add.audio('audioMenuHover');
 
