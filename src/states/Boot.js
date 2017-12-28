@@ -56,7 +56,10 @@ export default class extends Phaser.State {
 
 
     // Background + Environment
-    this.load.image('battleBackground1', './assets/images/battlebackgrounds/battleback1.png')
+    for(let i = 1; i <= 10; i ++) {
+      this.load.image('battleBackground'+ i, './assets/images/battlebackgrounds/battleback'+i+'.png')
+    }
+    
     this.load.image('cloud1', './assets/images/cloud.png')
 
     // Animations
@@ -86,16 +89,15 @@ export default class extends Phaser.State {
 
     this.load.audio('audioShield','./assets/audio/shieldSound.ogg')
 
-    this.load.audio('audioHit1','./assets/audio/hit1.ogg')
-    this.load.audio('audioHit2','./assets/audio/hit2.ogg')
-    this.load.audio('audioHit3','./assets/audio/hit3.ogg')
+    for(let i = 1; i <= 3; i ++) {
+      this.load.audio('audioHit'+i,'./assets/audio/hit'+i+'.ogg')
+    }
 
     this.load.audio('audioPlayerDamaged','./assets/audio/playerDamaged.ogg')
 
-    this.load.audio('audioMiss1','./assets/audio/miss1.ogg')
-    this.load.audio('audioMiss2','./assets/audio/miss2.ogg')
-    this.load.audio('audioMiss3','./assets/audio/miss3.ogg')
-    this.load.audio('audioMiss4','./assets/audio/miss4.ogg')
+    for(let i = 1; i <= 4; i ++) {
+      this.load.audio('audioMiss'+i,'./assets/audio/miss'+i+'.ogg')
+    }
 
     
   }

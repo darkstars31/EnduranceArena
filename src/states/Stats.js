@@ -59,7 +59,7 @@ export default class extends Phaser.State {
         this.stats.forEach(statItem => {
             let item = this.add.text(this.world.width / 3 - 160, this.game.height/4 + spacing, statItem.key +": "+ game.player[statItem.key.toLowerCase()], {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false})
             this.secondaryStatsList.push(this.add.text(this.world.width / 3 - 20, this.game.height/4 + spacing, statItem.secondaryKey +": "+  game.player[statItem.secondaryStat](), {font: 'Bangers', fontSize: 20, fill: '#77BFA3', smoothed: false}));
-            if(game.player.statPoints > 0) this.statPlusIconList.push(this.add.button(this.world.width / 3 - 190,this.game.height/4 + spacing, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item )}, this));
+            if(game.player.statPoints > 0) this.statPlusIconList.push(this.add.button(this.world.width / 3 - 190,this.game.height/4 + 4 + spacing, 'statPlusIcon', ()=> { this.spendStatPoint(statItem, item )}, this));
             spacing += 32;
         });
 

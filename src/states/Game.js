@@ -13,7 +13,7 @@ export default class extends Phaser.State {
   preload () {}
 
   create () {
-    let background = this.add.sprite(0,0, 'battleBackground1');
+    let background = this.add.sprite(0,0, 'battleBackground'+randomInt(1,10));
     background.scale.setTo(.7,.7);
     this.environment = new Environment();
     this.environment.cloudGeneration();

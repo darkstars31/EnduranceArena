@@ -31,7 +31,7 @@ export default class SoundFx {
    }
 
    shieldEffect(){
-	   return this.shieldEffect;
+	   return this.shieldSoundEffect;
    }
 
    playerAttack(){
