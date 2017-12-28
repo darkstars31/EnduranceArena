@@ -5,6 +5,7 @@ import Player from '../classes/player'
 import Monster from '../classes/monster'
 import HealthBar from '../classes/healthbar'
 import Environment from '../classes/environment'
+import SoundFx from '../classes/soundfx'
 import { randomInt } from '../utils'
 
 export default class extends Phaser.State {
@@ -17,14 +18,7 @@ export default class extends Phaser.State {
     this.environment = new Environment();
     this.environment.cloudGeneration();
 
-    this.amuletSoundEffect = this.add.audio('audioAmuletSoundEffect');
-    this.shieldSoundEffect = this.add.audio('audioShield');
-    this.playerDamagedSoundEffect = this.add.audio('audioPlayerDamaged');
-
-    this.audioItems = [];
-    this.audioItems.push(this.add.audio('audioHit1'));
-    this.audioItems.push(this.add.audio('audioHit2'));
-    this.audioItems.push(this.add.audio('audioHit3'));
+    this.sounds = new SoundFx();
     
     this.stageMenu = [];
     this.stageMenu.push(this.add.text(this.world.centerX, this.game.height / 6, "Stage Complete", {font: 'Bangers', fontSize: 48, fill: '#77BFA3', smoothed: false}));
@@ -39,7 +33,6 @@ export default class extends Phaser.State {
       item.visible = false;
     });
    
-    
 
     let monsterData = this.cache.getJSON('MonsterData');
     if(game.player.currentStage > monsterData.length - 1){
@@ -122,8 +115,8 @@ export default class extends Phaser.State {
   onAttackClick() {
     this.disableButtons();                  
     if(game.player.calculateChanceToHit(this.mob)){
-      this.attackAudio = this.audioItems[this.rnd.integerInRange(0,this.audioItems.length - 1)];
-      this.attackAudio.play();
+     
+      this.sounds.playerAttack().play();
       let damage = game.player.calculateAttack();
       let isCrit = damage > game.player.calculateAttackLowAndHigh()[1] + 10;
       console.log('Attack: ' + damage);
@@ -137,7 +130,7 @@ export default class extends Phaser.State {
 
   onDefendClick() {
     this.disableButtons();     
-    this.shieldSoundEffect.play();    
+    this.sounds.shieldEffect().play();    
     game.player.blocking = true; 
     game.player.wasBlocking = true;        
     this.isPlayersTurn = false; this.isMonstersTurn = true;
@@ -145,7 +138,7 @@ export default class extends Phaser.State {
 
   onHealthPotClick() {
     if(game.player.healthPotions > 0){
-        this.amuletSoundEffect.play();
+        this.sounds.amuletEffect().play();
         this.disableButtons();
         game.player.healthPotions -= 1;
         this.healthPotionCount.setText(game.player.healthPotions);
@@ -173,7 +166,7 @@ export default class extends Phaser.State {
           if(this.mob.calculateChanceToHit(game.player)){
             let damage = this.mob.calculateAttack();  
             setTimeout(() => {
-              this.playerDamagedSoundEffect.play();
+              this.sounds.playerDamaged().play();
               let isCrit = damage > this.mob.calculateAttackLowAndHigh()[1] + 10;
               game.player.recieveDamage(damage,isCrit).onComplete.add(()=> {
                         this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
