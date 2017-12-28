@@ -15,6 +15,7 @@ export default class Player extends character {
     this.level += 1;
     this.experience = 0;
     this.experienceToNext = this.experienceToNext + this.level * 77;
+    this.statPoints += 8;
   }
 
   spendStatPoint(statPointObj) {

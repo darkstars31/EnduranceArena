@@ -54,6 +54,7 @@ export default class extends Phaser.State {
     ];
     this.initUserInterface();
 
+    this.leveledUp = false;
     this.isPlayersTurn = true;
     this.isMonstersTurn = false;
 
@@ -98,7 +99,15 @@ export default class extends Phaser.State {
     switch(item._text){
       case 'Continue':
             game.player.currentStage += 1;
-            game.state.start('Game');
+            game.player.experience += this.mob.experience;
+            game.player.zeny += randomInt(this.mob.level*50, this.mob.level*100); 
+            console.log('exp: ' + game.player.experience);
+            if(game.player.experience > game.player.experienceToNext){
+              game.player.levelUp();
+              game.state.start('Stats');
+            } else {
+              game.state.start('Game');
+            }
             break;
       case 'Item Shop':
             break;
@@ -195,21 +204,29 @@ export default class extends Phaser.State {
       this.stageMenu[0].visible = 1;
       this.buttonList.forEach((item)=> item.inputEnabled = false);    
       if(!game.player.isAlive()) {
-        this.stageMenu[0].fill = 'red';
-        this.stageMenu[0].text = "YOU DIED";
-        this.stageMenu[3].visible = 1;
-        game.player.animationDeath();
+        this.endOfRoundEvent(false);
       }
       if(!this.mob.isAlive()){
-        this.stageMenu[1].visible = 1;
-        this.stageMenu[2].visible = 1;
-        this.mob.animationDeath();       
+        this.endOfRoundEvent(true);   
       }
     }
 
     //this.mushroom.x = game.player.sprite.x;
     if (__DEV__) {
       //this.game.debug.spriteInfo(this.mushroom, 130, 10)
+    }
+  }
+
+  endOfRoundEvent(playerWins) {
+    if(playerWins){
+      this.stageMenu[1].visible = 1;
+      this.stageMenu[2].visible = 1;
+      this.mob.animationDeath();   
+    } else {
+      this.stageMenu[0].fill = 'red';
+      this.stageMenu[0].text = "YOU DIED";
+      this.stageMenu[3].visible = 1;
+      game.player.animationDeath();
     }
   }
 }

@@ -101,7 +101,9 @@ export default class extends Phaser.State {
         this.add.audio('audioMenuSelect').play();
         switch(item.text){
             case 'Next':
-                game.player.hp = game.player.calculateMaxHp();
+                if(game.player.hp == 0){
+                    game.player.hp = game.player.calculateMaxHp();
+                }
                 this.state.start('Game');
                 break;
             case 'Back':

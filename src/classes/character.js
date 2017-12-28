@@ -8,7 +8,7 @@ export default class Character {
 	this.floatingCombatText = new FloatingCombatText();  
 	this.name 			= obj ? obj.name : '';
 	this.level 			= obj ? obj.level : 1;
-	this.experience		= obj ? obj.experience : 1;
+	this.experience		= obj ? obj.experience : 0;
 	this.experienceToNext = obj ? obj.experienceToNext : 100;
 	this.zeny 			= obj ? obj.zeny : 0;
 	this.statPoints 	= obj ? obj.statPoints : 40;
