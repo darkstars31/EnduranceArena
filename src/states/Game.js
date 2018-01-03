@@ -204,7 +204,7 @@ export default class extends Phaser.State {
       this.stageMenu[1].visible = 1;
       this.stageMenu[2].visible = 1;
       this.mob.animationDeath();  
-      game.player.experience += this.mob.experience;
+      game.player.gainExperience(this.mob.experience);
       game.player.zeny += randomInt(this.mob.level*50, this.mob.level*100);  
       if(game.player.experience > game.player.experienceToNext){
         game.player.levelUp();

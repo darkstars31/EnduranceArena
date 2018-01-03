@@ -13,6 +13,11 @@ export default class Player extends character {
 
   }
 
+  gainExperience(experience) {
+    this.experience += experience;
+    if()
+  }
+
   levelUp() {
     this.audioLevelUp = game.add.audio('audioLevelUp');
     this.audioLevelUp.play();
