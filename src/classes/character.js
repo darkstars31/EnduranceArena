@@ -3,6 +3,7 @@ import { randomInt } from '../utils';
 import Regen from '../classes/regenSkill'
 import SoundFx from '../classes/soundfx'
 import FloatingCombatText from './floatingCombatText'
+import Riposte from './riposteSkill';
 
 export default class Character {
 
@@ -31,6 +32,7 @@ export default class Character {
 	this.luck 			= obj ? obj.stats.luck : 1;
 
 	this.inventory = [];
+	this.statusEffects = [];
 	
 	this.blocking = false;
 	this.wasBlocking = false;
@@ -40,10 +42,19 @@ export default class Character {
 
 	this.sounds = new SoundFx();
 	this.regen = new Regen(this);
+	this.riposte = new Riposte(this)
 	}
 	
 	isAlive() {
 		return this.hp > 0 ? true : false;
+	}
+
+	applyStatusEffects() {
+		if(this.statusEffects){
+			if(this.statusEffects.indexOf('poisoned') > 0){
+				this.recieveDamage(3,false);
+			}
+		}
 	}
 
 	recieveDamage(damage, isCrit) {
@@ -98,8 +109,8 @@ export default class Character {
 	}
 	
 	calculateCriticalChance() {
-    return Math.ceil(this.luck - Math.floor(this.luck * .2));
-  }
+    	return Math.ceil(this.luck - Math.floor(this.luck * .2));
+  	}
 
   calculateHp () {
       this.hp = this.hp.toFixed();
@@ -109,14 +120,17 @@ export default class Character {
 
   }
 
+  postAttackEvents(player){
+	  if(player.skills.riposte > 0) this.riposte.execute(player.skills.riposte, player.strength);
+  }
+
   postRoundEvents() {
 		if(this.skills.regen > 0) this.regen.execute(this.skills.regen);
+		this.applyStatusEffects();
   }
 
   useItem () {
 	
   }
-
-
 
 }

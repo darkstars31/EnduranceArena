@@ -13,10 +13,22 @@ export default class extends Phaser.State {
   preload () {}
 
   create () {
-    let background = this.add.sprite(0,0, 'battleBackground'+randomInt(1,10));
-    background.scale.setTo(.7,.7);
+    let backgroundRandLocation = randomInt(1,10);
+    let background = this.add.sprite(0,0, 'battleBackground'+backgroundRandLocation);
     this.environment = new Environment();
+    // switch(backgroundRandLocation){
+    //   case 2: //snow
+    //     break;
+    //   case 6: //leafs
+    //     break;
+    //   case 8: //lanterns
+    //     break;
+    //   default:
+    //     this.environment.cloudGeneration();
+    //     break;
+    // }
     this.environment.cloudGeneration();
+    background.scale.setTo(.7,.7);
 
     this.sounds = new SoundFx();
     
@@ -33,7 +45,6 @@ export default class extends Phaser.State {
       item.visible = false;
     });
    
-
     let monsterData = this.cache.getJSON('MonsterData');
     if(game.player.currentStage > monsterData.length - 1){
       game.stage.start('MainMenu');
@@ -53,7 +64,7 @@ export default class extends Phaser.State {
     this.stageEnded = false;
     this.leveledUp = false;
     this.isPlayersTurn = true;
-    this.isMonstersTurn = false;
+    this.isMonstersTurn = !this.isPlayersTurn;
 
     this.mushroom = new Mushroom({
       game: this.game,
@@ -169,7 +180,10 @@ export default class extends Phaser.State {
               this.sounds.playerDamaged().play();
               let isCrit = damage > this.mob.calculateAttackLowAndHigh()[1] + 10;
               game.player.recieveDamage(damage,isCrit).onComplete.add(()=> {
-                        this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); this.isPlayersTurn = true;});
+                        this.buttonList.forEach((item)=> { item.inputEnabled = true; item.tint = '0xFFFFFF'}); 
+                        this.isPlayersTurn = true;
+                        this.mob.postAttackEvents(game.player, this.mob);
+                      });
             }, 750);
           } else {          
             setTimeout(() => {       
@@ -205,7 +219,7 @@ export default class extends Phaser.State {
       this.stageMenu[2].visible = 1;
       this.mob.animationDeath();  
       game.player.gainExperience(this.mob.experience);
-      game.player.zeny += randomInt(this.mob.level*50, this.mob.level*100);  
+      game.player.zeny += randomInt(this.mob.level*25, this.mob.level*50);  
       if(game.player.experience > game.player.experienceToNext){
         game.player.levelUp();
         this.leveledUp = true;

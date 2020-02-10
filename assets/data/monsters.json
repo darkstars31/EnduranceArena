@@ -47,7 +47,7 @@
         "level": 3,
         "baseAttack": 4,
         "experience": 80,
-        "colorTint": "0x1F1F1F",
+        "colorTint": "#4C4C4C",
         "stats": {
             "strength" : 3,
             "agility" : 2,
@@ -96,7 +96,7 @@
             "dexterity" : 2,
             "vitality" : 3,
             "intelligence" : 1,
-            "luck" : 40
+            "luck" : 25
         },
         "animations": {
             "attack": "poringAttack",
@@ -171,7 +171,7 @@
     {
         "name": "Poring",
         "level": 9,
-        "baseAttack": 15,
+        "baseAttack": 8,
         "experience": 250,
         "colorTint": "0x6afafc",
         "stats": {
@@ -181,6 +181,48 @@
             "vitality" : 10,
             "intelligence" : 1,
             "luck" : 8
+        },
+        "animations": {
+            "attack": "poringAttack",
+            "idle": "poringIdle",
+            "death:":"poringDeath",
+            "damaged": "poringDamaged"
+        }
+    },
+    {
+        "name": "Poring",
+        "level": 10,
+        "baseAttack": 14,
+        "experience": 280,
+        "colorTint": "0x6afafe",
+        "stats": {
+            "strength" : 10,
+            "agility" : 5,
+            "dexterity" : 5,
+            "vitality" : 10,
+            "intelligence" : 1,
+            "luck" : 4
+        },
+        "animations": {
+            "attack": "poringAttack",
+            "idle": "poringIdle",
+            "death:":"poringDeath",
+            "damaged": "poringDamaged"
+        }
+    },
+    {
+        "name": "Poring",
+        "level": 11,
+        "baseAttack": 15,
+        "experience": 310,
+        "colorTint": "0x6afafa",
+        "stats": {
+            "strength" : 15,
+            "agility" : 5,
+            "dexterity" : 5,
+            "vitality" : 10,
+            "intelligence" : 1,
+            "luck" : 4
         },
         "animations": {
             "attack": "poringAttack",

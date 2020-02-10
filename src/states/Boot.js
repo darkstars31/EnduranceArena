@@ -61,6 +61,7 @@ export default class extends Phaser.State {
     }
     
     this.load.image('cloud1', './assets/images/cloud.png')
+    this.load.spritesheet('snowflakes', 'assets/images/snowflake.png', 17, 17);
 
     // Animations
     this.load.atlas('noviceAtlas', './assets/images/spritesheets/playerWalk.png','./assets/images/spritesheets/atlases/playerWalk.json')
@@ -71,16 +72,22 @@ export default class extends Phaser.State {
     this.load.spritesheet('noviceIdle', './assets/images/spritesheets/playerWalkSheet.png', 47, 86, 1, 1, 0)
     this.load.spritesheet('noviceWalk', './assets/images/spritesheets/playerWalkSheet.png', 47, 86, 8, 2, 0)
 
+    //Mobs
     this.load.spritesheet('poringIdle', './assets/images/spritesheets/poring.png', 60, 60, 4, 0, 0)
     this.load.spritesheet('poringAttack', './assets/images/spritesheets/poringAttack.png', 60, 45, 7, 0, 0)
     this.load.spritesheet('poringDamaged', './assets/images/spritesheets/poringDamaged.png', 52, 53, 2, 0, 0)
     this.load.spritesheet('poringDeath', './assets/images/spritesheets/poringDeath.png', 96, 75, 5, 0, 0)
 
+    this.load.spritesheet('orcIdle','./assets/images/spritesheets/', 0,0,0,0,0);
+    this.load.spritesheet('orcAttack','./assets/images/spritesheets/', 0,0,0,0,0);
+    this.load.spritesheet('orcDamaged','./assets/images/spritesheets/', 0,0,0,0,0);
+    this.load.spritesheet('orcDeath','./assets/images/spritesheets/', 0,0,0,0,0);
+
     this.load.atlas('highorc', './assets/images/spritesheets/highorcspritesheet.png', './assets/images/spritesheets/atlases/highorc.json')
     
     
     // Audio - http://www.soundsboom.com/categories great free sounds 
-    this.load.audio('battleStage','./assets/audio/prologue.ogg')
+    //this.load.audio('battleStage','./assets/audio/prologue.ogg')
     this.load.audio('audioMenuSelect','./assets/audio/MENU_Select.ogg')
     this.load.audio('audioMenuHover','./assets/audio/menuHover.ogg')
 

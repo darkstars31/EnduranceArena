@@ -15,7 +15,6 @@ export default class Player extends character {
 
   gainExperience(experience) {
     this.experience += experience;
-    if()
   }
 
   levelUp() {
