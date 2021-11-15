@@ -1,11 +1,5 @@
 # Endurance Arena
-## Using Phaser + ES6 + Webpack.
-#### Built using bootstrap project to create games with Phaser + ES6 + Webpack.
-
-![Phaser+ES6+Webpack](https://raw.githubusercontent.com/lean/phaser-es6-webpack/master/assets/images/phaser-es6-webpack.jpg)
-
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-
+#### Built with Phaser + ES6 + Webpack.
 
 ## Features
 - Turn based combat
